@@ -1,23 +1,23 @@
 package database
 
 import (
-	"github.com/mattn/go-sqlite3"
-	"github.com/jinzhu/gorm"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
-type TrushDay struct {
+type TrashDay struct {
 	gorm.Model
-	DayOfWeek string
-	TypeOfTrash string
+	Dayofweek string
+	Typeoftrash string
 }
 
-func New() {
+func New() *gorm.DB {
 	db, err := gorm.Open(sqlite.Open("trashday.db"), &gorm.Config{})
 	if err != nil {
 		panic("fail to connect database")
 	}
-
-	db.AutoMigrate(&TrushDay{})
+	// マイグレートの実行
+	db.AutoMigrate(&TrashDay{})
 
 	return db
 }

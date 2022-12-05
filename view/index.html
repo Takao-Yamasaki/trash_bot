@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <form action="POST" method="post">
+        <p>曜日: <input type="text" name="weekofday" value=""></p>
+        <p>収集物: <input type="text" name="typeoftrash" value="" ></p>
+        <input type="submit" value="登録">
+    </form>
+    <hr>
+    <table>
+        {{ range .trashdays }}
+            <tr>
+                <td>{{.ID}}</td>
+                <td>{{.Dayofweek}}</td>
+                <td>{{.Typeoftrash}}</td>
+            </tr>
+        {{ end }}
+    </table>
+</body>
+</html>
