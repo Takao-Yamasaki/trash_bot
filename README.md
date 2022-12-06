@@ -39,6 +39,13 @@
 ## 4.テーブル設計
 
 ## 5.エンドポイント
+| 目的                       | メソッド | エンドポイント   | 
+| -------------------------- | -------- | ---------------- | 
+| Trashdayの一覧を取得       | GET      | /trashdays       | 
+| Trashdayのデータを登録     | POST     | /trashdays       | 
+| Trashdayのデータ１件を取得 | GET      | /trashdays/[:id] | 
+| Trashdayデータを更新       | PUT      | /trashdays/[:id] | 
+| Trashdayデータを削除       | DELETE   | /trashdays       | 
 
 ## 6.起動方法
 
