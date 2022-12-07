@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"strconv"
 	"trash_bot/model"
 
@@ -10,6 +11,8 @@ import (
 // 一覧の取得
 func Index(c *gin.Context) {
 	tds := model.GetTrashDays()
+	// テスト
+	fmt.Println(tds)
 	c.HTML(200, "index.html", gin.H{"tds": tds})
 }
 
@@ -22,9 +25,9 @@ func DetailsTrashDay(c *gin.Context) {
 
 // 登録
 func CreateTrashDay(c *gin.Context) {
-	week := c.PostForm("week") 
+	day := c.PostForm("day") 
 	trash := c.PostForm("trash")	
-	td := model.TrashDay{Week: week, Trash: trash}
+	td := model.TrashDay{Day: day, Trash: trash}
 	td.Create()
 
 	c.Redirect(301, "/")
@@ -34,9 +37,9 @@ func CreateTrashDay(c *gin.Context) {
 func UpdateTrashDay(c *gin.Context) {
 	id, _ := strconv.Atoi(c.PostForm("id"))
 	td := model.GetTrashDay(id)
-	week := c.PostForm("week")
+	day := c.PostForm("day")
 	trash := c.PostForm("trash")
-	td.Week = week
+	td.Day = day
 	td.Trash = trash
 	td.Update()
 

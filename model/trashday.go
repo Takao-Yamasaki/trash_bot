@@ -6,9 +6,10 @@ import (
 	"gorm.io/gorm"
 )
 
+// admin_idの追加
 type TrashDay struct {
 	gorm.Model
-	Week  string
+	Day  string
 	Trash string
 }
 
@@ -26,16 +27,15 @@ func GetTrashDay(id int) TrashDay {
 }
 
 // 一覧の取得
-func GetTrashDays() []TrashDay {
+func GetTrashDays() (tds []TrashDay) {
 	db := sqlite.New()
 	connect, err := db.DB()
 	if err != nil {
 		panic(err)
 	}
-	var tds []TrashDay
 	db.Find(&tds)
 	connect.Close()
-	return tds
+	return
 }
 
 // 登録
