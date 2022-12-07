@@ -37,7 +37,10 @@
 - 天気API（Open Weather）
 
 ## 4.構成図
-<img width="825" alt="構成図" src="https://user-images.githubusercontent.com/24619682/206120279-f7b710ac-e7f1-4baa-9321-4b6ca4e80eca.png">
+![infra](https://user-images.githubusercontent.com/24619682/206127178-5a89428a-1cd3-48e0-8fb3-79ea2feaf273.png)
+
+## 5.テーブル設計
+![table](https://user-images.githubusercontent.com/24619682/206127671-2926b827-69eb-4208-badb-3bb74b4810c3.png)
 
 ## 5.エンドポイント
 | 目的                       | メソッド | エンドポイント   | 
@@ -49,6 +52,9 @@
 | TrashDayデータを削除       | DELETE   | /trash-days       | 
 
 ## 6.起動方法
+```
+$ docker-compose up -d
+```
 
 
 ## 7.参考
