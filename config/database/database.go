@@ -7,12 +7,12 @@ import (
 
 type TrashDay struct {
 	gorm.Model
-	Dayofweek string
-	Typeoftrash string
+	Week string
+	rash string
 }
 
 func New() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open("trashday.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("trashbot.db"), &gorm.Config{})
 	if err != nil {
 		panic("fail to connect database")
 	}

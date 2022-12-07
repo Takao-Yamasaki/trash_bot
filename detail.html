@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>詳細</title>
+</head>
+<body>
+    <form method="POST">
+        <p>ID: <input type="text" name="id" value="{{ .td.ID }}"></p>
+        <p>曜日: <input type="text" name="week" value="{{ .td.Week }}"></p>
+        <p>収集物: <input type="text" name="trash" value="{{ .td.Trash }}"></p>
+        <input type="submit" formaction="/trash-day/update" value="更新" />
+        <input type="submit" formaction="/trash-day/delete" value="削除">
+    </form>
+</body>
+</html>

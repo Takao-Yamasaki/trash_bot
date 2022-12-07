@@ -2,21 +2,22 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>ごみ収集日</title>
 </head>
 <body>
-    <form action="POST" method="post">
-        <p>曜日: <input type="text" name="weekofday" value=""></p>
-        <p>収集物: <input type="text" name="typeoftrash" value="" ></p>
+    <h1>ごみ収集日</h1>
+    <form method="POST" action="/trash-day/create">
+        <p>曜日: <input type="text" name="week" value=""></p>
+        <p>収集物: <input type="text" name="trash" value="" ></p>
         <input type="submit" value="登録">
     </form>
     <hr>
     <table>
-        {{ range .trashdays }}
+        {{ range .tds }}
             <tr>
                 <td>{{.ID}}</td>
-                <td>{{.Dayofweek}}</td>
-                <td>{{.Typeoftrash}}</td>
+                <td>{{.Week}}</td>
+                <td>{{.Trash}}</td>
             </tr>
         {{ end }}
     </table>

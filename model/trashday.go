@@ -6,55 +6,67 @@ import (
 	"gorm.io/gorm"
 )
 
-type Trashday struct {
+type TrashDay struct {
 	gorm.Model
-	Dayofweek   string
-	Typeoftrash string
+	Week  string
+	Trash string
 }
 
-func GetTrashday(id int) Trashday {
+// １件の取得
+func GetTrashDay(id int) TrashDay {
 	db := sqlite.New()
-	
 	connect, err := db.DB()
 	if err != nil {
 		panic(err)
 	}
-
-	var trashday Trashday
-	db.First(&trashday)
-
+	var td TrashDay
+	db.First(&td)
 	connect.Close()
-	
-	return trashday
+	return td
 }
 
 // 一覧の取得
-func GetTrashdays() []Trashday {
+func GetTrashDays() []TrashDay {
 	db := sqlite.New()
-
 	connect, err := db.DB()
 	if err != nil {
 		panic(err)
 	}
-
-	var trashdays []Trashday
-	db.Find(&trashdays)
-
+	var tds []TrashDay
+	db.Find(&tds)
 	connect.Close()
-
-	return trashdays
+	return tds
 }
 
 // 登録
-func (c *Trashday) Create() {
+func (td *TrashDay) Create() {
 	db := sqlite.New()
-
 	connect, err := db.DB()
 	if err != nil {
 		panic(err)
 	}
+	db.Create(td)
+	connect.Close()
+}
 
-	db.Create(c)
+// 更新
+func (td *TrashDay) Update() {
+	db := sqlite.New()
+	connect, err := db.DB()
+	if err != nil {
+		panic(err)
+	}
+	db.Save(td)
+	connect.Close()
+}
 
+// 削除
+func (td *TrashDay) Delete() {
+	db := sqlite.New()
+	connect, err := db.DB()
+	if err != nil {
+		panic(err)
+	}
+	db.Delete(td)
 	connect.Close()
 }
