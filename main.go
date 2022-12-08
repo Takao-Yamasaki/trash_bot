@@ -10,6 +10,7 @@ func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("view/trashday/*html")
 	router.LoadHTMLGlob("view/admin/*html")
+	router.LoadHTMLGlob("view/comment/*html")
 
 	// trashday
 	router.GET("/trash-days", controller.IndexTrashDay)
@@ -24,6 +25,10 @@ func main() {
 	router.POST("admin/create", controller.CreateAdmin)
 	router.POST("/admin/update", controller.UpdateAdmin)
 	router.POST("/admin/delete", controller.DeleteAdmin)
+
+	// commets
+	router.GET("/comments", controller.IndexComment)
+	router.GET("/comment/create", controller.CreateComment)
 
 	// サーバーの起動
 	router.Run(":8080")

@@ -7,15 +7,20 @@ import (
 
 type TrashDay struct {
 	gorm.Model
-	Day  string
+	Day   string
 	Trash string
 }
 
 type Admin struct {
 	gorm.Model
-	Name string
-	Email string
+	Name     string
+	Email    string
 	Password string
+}
+
+type Comment struct {
+	gorm.Model
+	Contents string
 }
 
 func New() *gorm.DB {
@@ -26,6 +31,7 @@ func New() *gorm.DB {
 	// マイグレートの実行
 	db.AutoMigrate(&TrashDay{})
 	db.AutoMigrate(&Admin{})
+	db.AutoMigrate(&Comment{})
 
 	return db
 }
