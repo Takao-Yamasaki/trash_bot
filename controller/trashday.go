@@ -10,14 +10,14 @@ import (
 // 一覧の取得
 func IndexTrashDay(c *gin.Context) {
 	trashdays := model.GetTrashDays()
-	c.HTML(200, "trashday/index.html", gin.H{"trashdays": trashdays})
+	c.HTML(200, "index.html", gin.H{"trashdays": trashdays})
 }
 
 // 詳細の取得
 func DetailsTrashDay(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	trashday := model.GetTrashDay(id)
-	c.HTML(200, "trashday/detail.html", gin.H{"trashday": trashday})
+	c.HTML(200, "detail.html", gin.H{"trashday": trashday})
 }
 
 // 登録

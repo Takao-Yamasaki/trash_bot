@@ -20,6 +20,7 @@ func main() {
 	
 	// admin
 	router.GET("/admins", controller.IndexAdmin)
+	router.GET("/admin/:id", controller.DetailsAdmin)
 	router.POST("admin/create", controller.CreateAdmin)
 
 	// サーバーの起動

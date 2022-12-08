@@ -13,6 +13,18 @@ type Admin struct {
 	Password string
 }
 
+func GetAdmin(id int) Admin {
+	db := sqlite.New()
+	connect, err := db.DB()
+	if err != nil {
+		panic(err)
+	}
+	var admin Admin
+	db.First(&admin)
+	connect.Close()
+	return admin
+}
+
 func GetAdmins() ([]Admin) {
 	db := sqlite.New()
 	connect, err := db.DB()
@@ -24,6 +36,7 @@ func GetAdmins() ([]Admin) {
 	connect.Close()
 	return admins
 }
+
 
 func (admin *Admin) Create() {
 	db := sqlite.New()
