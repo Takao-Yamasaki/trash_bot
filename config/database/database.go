@@ -7,8 +7,8 @@ import (
 
 type TrashDay struct {
 	gorm.Model
-	Week string
-	rash string
+	Day  string
+	Trash string
 }
 
 func New() *gorm.DB {

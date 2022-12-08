@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"strconv"
 	"trash_bot/model"
 
@@ -10,40 +9,38 @@ import (
 
 // 一覧の取得
 func Index(c *gin.Context) {
-	tds := model.GetTrashDays()
-	// テスト
-	fmt.Println(tds)
-	c.HTML(200, "index.html", gin.H{"tds": tds})
+	trashdays := model.GetTrashDays()
+	c.HTML(200, "index.html", gin.H{"trashdays": trashdays})
 }
 
 // 詳細の取得
 func DetailsTrashDay(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	td := model.GetTrashDay(id)
-	c.HTML(200, "detail.html", gin.H{"td": td})
+	trashday := model.GetTrashDay(id)
+	c.HTML(200, "detail.html", gin.H{"trashday": trashday})
 }
 
 // 登録
 func CreateTrashDay(c *gin.Context) {
-	day := c.PostForm("day") 
-	trash := c.PostForm("trash")	
+	day := c.PostForm("day")
+	trash := c.PostForm("trash")
 	td := model.TrashDay{Day: day, Trash: trash}
 	td.Create()
 
-	c.Redirect(301, "/")
+	c.Redirect(301, "/trash-days")
 }
 
 // 更新
 func UpdateTrashDay(c *gin.Context) {
 	id, _ := strconv.Atoi(c.PostForm("id"))
-	td := model.GetTrashDay(id)
+	trashday := model.GetTrashDay(id)
 	day := c.PostForm("day")
 	trash := c.PostForm("trash")
-	td.Day = day
-	td.Trash = trash
-	td.Update()
+	trashday.Day = day
+	trashday.Trash = trash
+	trashday.Update()
 
-	c.Redirect(301, "/")
+	c.Redirect(301, "/trash-days")
 }
 
 // 削除
@@ -52,5 +49,5 @@ func DeleteTrashDay(c *gin.Context) {
 	td := model.GetTrashDay(id)
 	td.Delete()
 
-	c.Redirect(301, "/")
+	c.Redirect(301, "/trash-days")
 }

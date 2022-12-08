@@ -20,53 +20,55 @@ func GetTrashDay(id int) TrashDay {
 	if err != nil {
 		panic(err)
 	}
-	var td TrashDay
-	db.First(&td)
+	var trashday TrashDay
+	db.First(&trashday)
 	connect.Close()
-	return td
+	return trashday
 }
 
 // 一覧の取得
-func GetTrashDays() (tds []TrashDay) {
+func GetTrashDays() ([]TrashDay) {
 	db := sqlite.New()
 	connect, err := db.DB()
 	if err != nil {
 		panic(err)
 	}
-	db.Find(&tds)
+	var trashdays []TrashDay
+	db.Find(&trashdays)
 	connect.Close()
-	return
+	return trashdays
 }
 
 // 登録
-func (td *TrashDay) Create() {
+func (trashday *TrashDay) Create() {
 	db := sqlite.New()
+
 	connect, err := db.DB()
 	if err != nil {
 		panic(err)
 	}
-	db.Create(td)
+	db.Create(trashday)
 	connect.Close()
 }
 
 // 更新
-func (td *TrashDay) Update() {
+func (trashday *TrashDay) Update() {
 	db := sqlite.New()
 	connect, err := db.DB()
 	if err != nil {
 		panic(err)
 	}
-	db.Save(td)
+	db.Save(trashday)
 	connect.Close()
 }
 
 // 削除
-func (td *TrashDay) Delete() {
+func (trashday *TrashDay) Delete() {
 	db := sqlite.New()
 	connect, err := db.DB()
 	if err != nil {
 		panic(err)
 	}
-	db.Delete(td)
+	db.Delete(trashday)
 	connect.Close()
 }
