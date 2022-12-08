@@ -11,6 +11,13 @@ type TrashDay struct {
 	Trash string
 }
 
+type Admin struct {
+	gorm.Model
+	Name string
+	Email string
+	Password string
+}
+
 func New() *gorm.DB {
 	db, err := gorm.Open(sqlite.Open("trashbot.db"), &gorm.Config{})
 	if err != nil {
@@ -18,6 +25,7 @@ func New() *gorm.DB {
 	}
 	// マイグレートの実行
 	db.AutoMigrate(&TrashDay{})
+	db.AutoMigrate(&Admin{})
 
 	return db
 }
