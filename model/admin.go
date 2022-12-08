@@ -8,8 +8,8 @@ import (
 
 type Admin struct {
 	gorm.Model
-	Name string
-	Email string
+	Name     string
+	Email    string
 	Password string
 }
 
@@ -25,7 +25,7 @@ func GetAdmin(id int) Admin {
 	return admin
 }
 
-func GetAdmins() ([]Admin) {
+func GetAdmins() []Admin {
 	db := sqlite.New()
 	connect, err := db.DB()
 	if err != nil {
@@ -37,7 +37,6 @@ func GetAdmins() ([]Admin) {
 	return admins
 }
 
-
 func (admin *Admin) Create() {
 	db := sqlite.New()
 
@@ -46,5 +45,25 @@ func (admin *Admin) Create() {
 		panic(err)
 	}
 	db.Create(admin)
+	connect.Close()
+}
+
+func (admin *Admin) Update() {
+	db := sqlite.New()
+	connect, err := db.DB()
+	if err != nil {
+		panic(err)
+	}
+	db.Save(admin)
+	connect.Close()
+}
+
+func (admin *Admin) Delete() {
+	db := sqlite.New()
+	connect, err := db.DB()
+	if err != nil {
+		panic(err)
+	}
+	db.Delete(admin)
 	connect.Close()
 }

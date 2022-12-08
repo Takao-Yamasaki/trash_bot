@@ -28,3 +28,25 @@ func CreateAdmin(c *gin.Context) {
 
 	c.Redirect(301, "/admins")
 }
+
+func UpdateAdmin(c *gin.Context) {
+	id, _ := strconv.Atoi(c.PostForm("id"))
+	admin := model.GetAdmin(id)
+	name := c.PostForm("name")
+	email := c.PostForm("email")
+	password := c.PostForm("password")
+	admin.Name = name
+	admin.Email = email
+	admin.Password = password
+	admin.Update()
+
+	c.Redirect(301, "/admins")
+}
+
+func DeleteAdmin(c *gin.Context) {
+	id, _ := strconv.Atoi(c.PostForm("id"))
+	admin := model.GetAdmin(id)
+	admin.Delete()
+
+	c.Redirect(301, "/admins")
+}

@@ -46,8 +46,8 @@ func UpdateTrashDay(c *gin.Context) {
 // 削除
 func DeleteTrashDay(c *gin.Context) {
 	id, _ := strconv.Atoi(c.PostForm("id"))
-	td := model.GetTrashDay(id)
-	td.Delete()
+	trashday := model.GetTrashDay(id)
+	trashday.Delete()
 
 	c.Redirect(301, "/trash-days")
 }
