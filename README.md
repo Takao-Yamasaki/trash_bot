@@ -20,21 +20,21 @@
     - 管理者ログイン機能（今後実装）
 
 ## 3.使用技術
-### 言語
-- Go
-- Gin
-- GORM
+### 言語・フレームワーク
+- Go(1.19)
+- Gin(1.8.1)
+- Gorm(1.24.2)
 
 ### データベース
-- SQLite3
+- SQLite3(3.37.0)
 
 ### インフラ
-- Docker
-- docker-compose
+- Docker(未実装)
+- docker-compose(未実装)
 
 ### 外部API
-- LINE Messaging API
-- 天気API（Open Weather）
+- LINE Messaging API(未実装)
+- Open Weather(未実装)
 
 ## 4.構成図
 ![infra](https://user-images.githubusercontent.com/24619682/206127178-5a89428a-1cd3-48e0-8fb3-79ea2feaf273.png)
@@ -43,19 +43,30 @@
 ![table](https://user-images.githubusercontent.com/24619682/206127671-2926b827-69eb-4208-badb-3bb74b4810c3.png)
 
 ## 5.エンドポイント
-| 目的                       | メソッド | エンドポイント   | 
-| -------------------------- | -------- | ---------------- | 
+| 目的                       | メソッド | エンドポイント    | 
+| -------------------------- | -------- | ----------------- | 
 | TrashDayの一覧を取得       | GET      | /trash-days       | 
-| TrashDayのデータを登録     | POST     | /trash-days       | 
-| TrashDayのデータ１件を取得 | GET      | /trash-days/[:id] | 
-| TrashDayデータを更新       | PUT      | /trash-days/[:id] | 
-| TrashDayデータを削除       | DELETE   | /trash-days       | 
+| TrashDayのデータ１件を取得 | GET      | /trash-day/:id    | 
+| TrashDayのデータを登録     | POST     | /trash-day/create | 
+| TrashDayデータを更新       | POST     | /trash-day/update | 
+| TrashDayデータを削除       | POST     | /trash-day/delete | 
+| Adminの一覧を取得          | GET      | /admins           | 
+| Adminのデータ１件を取得    | GET      | /admin/:id        | 
+| Adminのデータを登録        | POST     | /admin/create     | 
+| Adminデータを更新          | POST     | /admin/update     | 
+| Adminデータを削除          | POST     | /admin/delete     | 
+| Commentの一覧を取得        | GET      | /comments         | 
+| Commentのデータ１件を取得  | GET      | /comment/:id      | 
+| Commentのデータを登録      | POST     | /comment/create   | 
+| Commentデータを更新        | POST     | /comment/update   | 
+| Commentデータを削除        | POST     | /comment/delete   | 
+- 更新処理と削除処理のHTTPメソッドについては、今後見直す予定
 
 ## 6.起動方法
+- Dockerfile/docker-compose.ymlについては、今後実装予定
 ```
 $ docker-compose up -d
 ```
-
 
 ## 7.参考
 - [Go(Golang)+Herokuで天気予報通知LINE BOTを作成する](https://qiita.com/yuki_0920/items/cbdbd5220a6a8b4eef19)

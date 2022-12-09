@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>コメント詳細</title>
+</head>
+<body>
+    <h1>コメントの詳細</h1>
+    <form method="POST">
+        <p>ID: <input type="text" name="id" value="{{ .comment.ID }}"></p>
+        <p>コメント内容: <input type="text" name="contents" value="{{ .comment.Contents }}"></p>
+        <input type="submit" formaction="/comment/update" value="更新">
+        <input type="submit" formaction="/comment/delete" value="削除">
+    </form>
+</body>
+</html>

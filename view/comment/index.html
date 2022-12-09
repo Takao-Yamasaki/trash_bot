@@ -14,7 +14,7 @@
   <table>
     {{ range .comments }}
       <tr>
-        <td>ID: {{ .ID }}</td>
+        <td><a href="/comment/{{.ID}}">{{.ID}}</a></td>
         <td>コメント内容: {{ .Contents }}</td>
       </tr>
     {{ end }}

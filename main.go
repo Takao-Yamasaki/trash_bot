@@ -26,9 +26,12 @@ func main() {
 	router.POST("/admin/update", controller.UpdateAdmin)
 	router.POST("/admin/delete", controller.DeleteAdmin)
 
-	// commets
+	// comment
 	router.GET("/comments", controller.IndexComment)
-	router.GET("/comment/create", controller.CreateComment)
+	router.GET("/comment/:id", controller.DetailsComment)
+	router.POST("/comment/create", controller.CreateComment)
+	router.POST("/comment/update", controller.UpdateComment)
+	router.POST("/comment/delete", controller.DeleteComment)
 
 	// サーバーの起動
 	router.Run(":8080")
