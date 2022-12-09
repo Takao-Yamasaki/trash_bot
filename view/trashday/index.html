@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+{{ define "trashday/index.html" }}
 <head>
     <meta charset="UTF-8">
     <title>ごみ収集日登録</title>
@@ -13,7 +14,7 @@
     </form>
     <hr>
     <table>
-        {{ range .trashdays }}
+        {{ range .tds }}
             <tr>
                 <td><a href ="/trash-day/{{.ID}}">{{ .ID }}</a></td>
                 <td>曜日: {{ .Day }}</td>
@@ -23,3 +24,4 @@
     </table>
 </body>
 </html>
+{{ end }}

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{{ define "trashday/detail.html" }}
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -7,12 +8,12 @@
 <body>
     <h1>ごみ収集日の詳細</h1>
     <form method="POST">
-        <p>ID: <input type="text" name="id" value="{{ .trashday.ID }}"></p>
-        <p>曜日: <input type="text" name="day" value="{{ .trashday.Day }}"></p>
-        <p>収集物: <input type="text" name="trash" value="{{ .trashday.Trash }}"></p>
+        <p>ID: <input type="text" name="id" value="{{ .td.ID }}"></p>
+        <p>曜日: <input type="text" name="day" value="{{ .td.Day }}"></p>
+        <p>収集物: <input type="text" name="trash" value="{{ .td.Trash }}"></p>
         <input type="submit" formaction="/trash-day/update" value="更新" />
         <input type="submit" formaction="/trash-day/delete" value="削除" />
     </form>
 </body>
 </html>
-ｓ
+{{ end }}

@@ -7,39 +7,41 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func IndexComment(c *gin.Context) {
+type CommentController struct{}
+
+func (cc CommentController) IndexComment(c *gin.Context) {
 	comments := model.GetComments()
-	c.HTML(200, "index.html", gin.H{"comments": comments})
+	c.HTML(200, "comment/index.html", gin.H{"comments": comments})
 }
 
-func DetailsComment(c *gin.Context) {
+func (cc CommentController) DetailsComment(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	comment := model.GetComment(id)
-	c.HTML(200, "detail.html", gin.H{"comment": comment})
+	c.HTML(200, "comment/detail.html", gin.H{"comment": comment})
 }
 
-func CreateComment(c *gin.Context) {
+func (cc CommentController) CreateComment(c *gin.Context) {
 	contents := c.PostForm("contents")
 	comment := model.Comment{Contents: contents}
 	comment.Create()
 
-	c.Redirect(301, "/comments")
+	c.Redirect(301, "/comment/index")
 }
 
-func UpdateComment(c *gin.Context) {
+func (cc CommentController) UpdateComment(c *gin.Context) {
 	id, _ := strconv.Atoi(c.PostForm("id"))
 	comment := model.GetComment(id)
 	contents := c.PostForm("contents")
 	comment.Contents = contents
 	comment.Update()
 
-	c.Redirect(301, "/comments")
+	c.Redirect(301, "/comment/index")
 }
 
-func DeleteComment(c *gin.Context) {
+func (cc CommentController) DeleteComment(c *gin.Context) {
 	id, _ := strconv.Atoi(c.PostForm("id"))
 	comment := model.GetComment(id)
 	comment.Delete()
 
-	c.Redirect(301, "/comments")
+	c.Redirect(301, "/comment/index")
 }

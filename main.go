@@ -8,30 +8,41 @@ import (
 
 func main() {
 	router := gin.Default()
-	router.LoadHTMLGlob("view/trashday/*html")
-	router.LoadHTMLGlob("view/admin/*html")
-	router.LoadHTMLGlob("view/comment/*html")
+	router.LoadHTMLGlob("view/**/*")
 
-	// trashday
-	router.GET("/trash-days", controller.IndexTrashDay)
-	router.GET("/trash-day/:id", controller.DetailsTrashDay)
-	router.POST("trash-day/create", controller.CreateTrashDay)
-	router.POST("/trash-day/update", controller.UpdateTrashDay)
-	router.POST("/trash-day/delete", controller.DeleteTrashDay)
+	// TrashDay
+	td := router.Group("/trash-day")
+	{
+		ctrl := controller.TrashDayController{}
+		td.GET("/index", ctrl.IndexTrashDay)
+		td.GET("/:id", ctrl.DetailsTrashDay)
+		td.POST("/create", ctrl.CreateTrashDay)
+		td.POST("/update", ctrl.UpdateTrashDay)
+		td.POST("/delete", ctrl.DeleteTrashDay)
+	}
+	
 
-	// admin
-	router.GET("/admins", controller.IndexAdmin)
-	router.GET("/admin/:id", controller.DetailsAdmin)
-	router.POST("admin/create", controller.CreateAdmin)
-	router.POST("/admin/update", controller.UpdateAdmin)
-	router.POST("/admin/delete", controller.DeleteAdmin)
+	// Admin
+	admin := router.Group("/admin")
+	{
+		ctrl := controller.AdminController{}
+		admin.GET("/index", ctrl.IndexAdmin)
+		admin.GET("/:id", ctrl.DetailsAdmin)
+		admin.POST("/create", ctrl.CreateAdmin)
+		admin.POST("/update", ctrl.UpdateAdmin)
+		admin.POST("/delete", ctrl.DeleteAdmin)
+	}
 
-	// comment
-	router.GET("/comments", controller.IndexComment)
-	router.GET("/comment/:id", controller.DetailsComment)
-	router.POST("/comment/create", controller.CreateComment)
-	router.POST("/comment/update", controller.UpdateComment)
-	router.POST("/comment/delete", controller.DeleteComment)
+	// Comment
+	comment := router.Group("/comment")
+	{
+		ctrl := controller.CommentController{}
+		comment.GET("/index", ctrl.IndexComment)
+		comment.GET("/:id", ctrl.DetailsComment)
+		comment.POST("/create", ctrl.CreateComment)
+		comment.POST("/update", ctrl.UpdateComment)
+		comment.POST("/delete", ctrl.DeleteComment)
+	}
 
 	// サーバーの起動
 	router.Run(":8080")

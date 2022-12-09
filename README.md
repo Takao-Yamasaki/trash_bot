@@ -21,9 +21,9 @@
 
 ## 3.使用技術
 ### 言語・フレームワーク
-- Go(1.19)
-- Gin(1.8.1)
-- Gorm(1.24.2)
+- Go(`1.19`)
+- Gin(`1.8.1`)
+- Gorm(`1.24.2`)
 
 ### データベース
 - SQLite3(3.37.0)
@@ -45,17 +45,17 @@
 ## 5.エンドポイント
 | 目的                       | メソッド | エンドポイント    | 
 | -------------------------- | -------- | ----------------- | 
-| TrashDayの一覧を取得       | GET      | /trash-days       | 
+| TrashDayの一覧を取得       | GET      | /trash-day/index  | 
 | TrashDayのデータ１件を取得 | GET      | /trash-day/:id    | 
 | TrashDayのデータを登録     | POST     | /trash-day/create | 
 | TrashDayデータを更新       | POST     | /trash-day/update | 
 | TrashDayデータを削除       | POST     | /trash-day/delete | 
-| Adminの一覧を取得          | GET      | /admins           | 
+| Adminの一覧を取得          | GET      | /admin/index     | 
 | Adminのデータ１件を取得    | GET      | /admin/:id        | 
 | Adminのデータを登録        | POST     | /admin/create     | 
 | Adminデータを更新          | POST     | /admin/update     | 
 | Adminデータを削除          | POST     | /admin/delete     | 
-| Commentの一覧を取得        | GET      | /comments         | 
+| Commentの一覧を取得        | GET      | /comment/index    | 
 | Commentのデータ１件を取得  | GET      | /comment/:id      | 
 | Commentのデータを登録      | POST     | /comment/create   | 
 | Commentデータを更新        | POST     | /comment/update   | 
