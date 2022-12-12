@@ -20,6 +20,10 @@ func main() {
 	trashDayPersistance := persistance.NewTrashDayPersistance(db, trashDayRepository)
 	trashDayController := controller.NewTrashDayController(trashDayPersistance)
 
+	var adminRepository repository.AdminRepository
+	adminPersistance := persistance.NewAdminPersistance(db, adminRepository)
+	adminController := controller.NewAdminController(adminPersistance)
+
 	router := gin.Default()
 	router.LoadHTMLGlob("view/**/*")
 
@@ -31,15 +35,11 @@ func main() {
 	router.POST("/trash-day/delete", trashDayController.DeleteTrashDay)
 
 	// Admin
-	admin := router.Group("/admin")
-	{
-		ctrl := controller.AdminController{}
-		admin.GET("/index", ctrl.IndexAdmin)
-		admin.GET("/:id", ctrl.DetailsAdmin)
-		admin.POST("/create", ctrl.CreateAdmin)
-		admin.POST("/update", ctrl.UpdateAdmin)
-		admin.POST("/delete", ctrl.DeleteAdmin)
-	}
+	router.GET("/admin/index", adminController.IndexAdmin)
+	router.GET("/admin/:id", adminController.DetailAdmin)
+	router.POST("/admin/create", adminController.CreateAdmin)
+	router.POST("/admin/update", adminController.UpdateAdmin)
+	router.POST("/admin/delete", adminController.DeleteAdmin)
 
 	// Comment
 	comment := router.Group("/comment")

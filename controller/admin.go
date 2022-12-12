@@ -2,53 +2,68 @@ package controller
 
 import (
 	"strconv"
-	"trash_bot/model"
+	"trash_bot/domain/model"
+	"trash_bot/domain/repository"
 
 	"github.com/gin-gonic/gin"
 )
 
-type AdminController struct{}
+type adminController struct {
+	adminRepository repository.AdminRepository
+}
 
-func (ac AdminController) IndexAdmin(c *gin.Context) {
-	admins := model.GetAdmins()
+func NewAdminController(ar repository.AdminRepository) adminController {
+	return adminController{
+		adminRepository: ar,
+	}
+}
+
+// 一覧の取得
+func (ac *adminController) IndexAdmin(c *gin.Context) {
+	admins := ac.adminRepository.GetAdmins()
 	c.HTML(200, "admin/index.html", gin.H{"admins": admins})
 }
 
-func (ac AdminController) DetailsAdmin(c *gin.Context) {
+// 詳細の取得
+func (ac *adminController) DetailAdmin(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	admin := model.GetAdmin(id)
+	admin := ac.adminRepository.GetAdmin(id)
 	c.HTML(200, "admin/detail.html", gin.H{"admin": admin})
 }
 
-func (ac AdminController) CreateAdmin(c *gin.Context) {
+// 登録
+func (ac *adminController) CreateAdmin(c *gin.Context) {
 	name := c.PostForm("name")
 	email := c.PostForm("email")
 	password := c.PostForm("password")
 
 	admin := model.Admin{Name: name, Email: email, Password: password}
-	admin.Create()
+	ac.adminRepository.Create(admin)
 
 	c.Redirect(301, "/admin/index")
 }
 
-func (ac AdminController) UpdateAdmin(c *gin.Context) {
+// 更新
+func (ac *adminController) UpdateAdmin(c *gin.Context) {
 	id, _ := strconv.Atoi(c.PostForm("id"))
-	admin := model.GetAdmin(id)
+	admin := ac.adminRepository.GetAdmin(id)
+	
 	name := c.PostForm("name")
 	email := c.PostForm("email")
 	password := c.PostForm("password")
 	admin.Name = name
 	admin.Email = email
 	admin.Password = password
-	admin.Update()
+	ac.adminRepository.Update(admin)
 
 	c.Redirect(301, "/admin/index")
 }
 
-func (ac AdminController) DeleteAdmin(c *gin.Context) {
+// 削除
+func (ac *adminController) DeleteAdmin(c *gin.Context) {
 	id, _ := strconv.Atoi(c.PostForm("id"))
-	admin := model.GetAdmin(id)
-	admin.Delete()
+	admin := ac.adminRepository.GetAdmin(id)
+	ac.adminRepository.Delete(admin)
 
 	c.Redirect(301, "/admin/index")
 }
