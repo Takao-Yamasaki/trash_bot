@@ -15,14 +15,20 @@ func main() {
 	connect, _ := db.DB()
 	defer connect.Close()
 
-	// DI(Dependency Injection: オブジェクトの注入)
+	// trash DI(Dependency Injection: オブジェクトの注入)
 	var trashDayRepository repository.TrashDayRepository
 	trashDayPersistance := persistance.NewTrashDayPersistance(db, trashDayRepository)
 	trashDayController := controller.NewTrashDayController(trashDayPersistance)
 
+	// admin DI
 	var adminRepository repository.AdminRepository
 	adminPersistance := persistance.NewAdminPersistance(db, adminRepository)
 	adminController := controller.NewAdminController(adminPersistance)
+
+	// comment DI
+	var commentRepository repository.CommentRepository
+	commentPersistance  := persistance.NewCommentPersistance(db, commentRepository)
+	commentController := controller.NewCommentController(commentPersistance)
 
 	router := gin.Default()
 	router.LoadHTMLGlob("view/**/*")
@@ -42,15 +48,11 @@ func main() {
 	router.POST("/admin/delete", adminController.DeleteAdmin)
 
 	// Comment
-	comment := router.Group("/comment")
-	{
-		ctrl := controller.CommentController{}
-		comment.GET("/index", ctrl.IndexComment)
-		comment.GET("/:id", ctrl.DetailsComment)
-		comment.POST("/create", ctrl.CreateComment)
-		comment.POST("/update", ctrl.UpdateComment)
-		comment.POST("/delete", ctrl.DeleteComment)
-	}
+	router.GET("/comment/index", commentController.IndexComment)
+	router.GET("/comment/:id", commentController.DetailsComment)
+	router.POST("/comment/create", commentController.CreateComment)
+	router.POST("/comment/update", commentController.UpdateComment)
+	router.POST("/comment/delete", commentController.DeleteComment)
 
 	// サーバーの起動
 	router.Run(":8080")
