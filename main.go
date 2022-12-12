@@ -1,26 +1,34 @@
 package main
 
 import (
+	sqlite "trash_bot/config/database"
+
 	"github.com/gin-gonic/gin"
 
 	"trash_bot/controller"
+	"trash_bot/domain/repository"
+	"trash_bot/infrastructure/persistance"
 )
 
 func main() {
+	db := sqlite.New()
+	connect, _ := db.DB()
+	defer connect.Close()
+
+	// DI(Dependency Injection: オブジェクトの注入)
+	var trashDayRepository repository.TrashDayRepository
+	trashDayPersistance := persistance.NewTrashDayPersistance(db, trashDayRepository)
+	trashDayController := controller.NewTrashDayController(trashDayPersistance)
+
 	router := gin.Default()
 	router.LoadHTMLGlob("view/**/*")
 
 	// TrashDay
-	td := router.Group("/trash-day")
-	{
-		ctrl := controller.TrashDayController{}
-		td.GET("/index", ctrl.IndexTrashDay)
-		td.GET("/:id", ctrl.DetailsTrashDay)
-		td.POST("/create", ctrl.CreateTrashDay)
-		td.POST("/update", ctrl.UpdateTrashDay)
-		td.POST("/delete", ctrl.DeleteTrashDay)
-	}
-	
+	router.GET("/trash-day/index", trashDayController.IndexTrashDay)
+	router.GET("/trash-day/:id", trashDayController.DetailTrashDay)
+	router.POST("/trash-day/create", trashDayController.CreateTrashDay)
+	router.POST("/trash-day/update", trashDayController.UpdateTrashDay)
+	router.POST("/trash-day/delete", trashDayController.DeleteTrashDay)
 
 	// Admin
 	admin := router.Group("/admin")
