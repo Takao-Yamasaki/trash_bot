@@ -5,9 +5,9 @@ import (
 )
 
 type TrashDayRepository interface {
-	GetTrashDay(id int) model.TrashDay
-	GetTrashDays() []model.TrashDay
-	Create(td model.TrashDay)
-	Update(td model.TrashDay)
-	Delete(td model.TrashDay)
+	GetTrashDay(id int) (result *model.TrashDay, err error)
+	GetTrashDays() (result []model.TrashDay, err error)
+	Create(td model.TrashDay) error
+	Update(td model.TrashDay) error
+	Delete(td model.TrashDay) error
 }
