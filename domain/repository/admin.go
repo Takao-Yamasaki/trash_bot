@@ -5,9 +5,9 @@ import (
 )
 
 type AdminRepository interface {
-	GetAdmin(id int) model.Admin
-	GetAdmins() []model.Admin
-	Create(admin model.Admin)
-	Update(admin model.Admin)
-	Delete(admin model.Admin)
+	GetAdmin(id int) (result *model.Admin, err error)
+	GetAdmins() (result []model.Admin, err error)
+	Create(admin model.Admin) error
+	Update(admin model.Admin) error
+	Delete(admin model.Admin) error
 }
