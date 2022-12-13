@@ -59,6 +59,7 @@ func (tc *trashDayController) CreateTrashDay(c *gin.Context) {
 	if err := c.ShouldBind(&form); err != nil {
 		fmt.Println(err)
 		c.HTML(400, "400.html", gin.H{"error": err.Error()})
+		return
 	}
 
 	day := form.Day
@@ -118,11 +119,11 @@ func (tc *trashDayController) UpdateTrashDay(c *gin.Context) {
 // 削除
 func (tc *trashDayController) DeleteTrashDay(c *gin.Context) {
 	type RequestDataField struct {
-		ID string `form:"id" binging:"required"`
+		ID string `form:"id" binding:"required"`
 	}
 
 	var form RequestDataField
-	
+
 	if err := c.ShouldBind(&form); err != nil {
 		fmt.Println(err)
 		c.HTML(400, "400.html", gin.H{"error": err.Error()})
@@ -131,7 +132,7 @@ func (tc *trashDayController) DeleteTrashDay(c *gin.Context) {
 
 	id, err := strconv.Atoi(form.ID)
 	if err != nil {
-		fmt.Println()
+		fmt.Println(err)
 		c.HTML(400, "400.html", gin.H{"error": err.Error()})
 		return
 	}
