@@ -5,9 +5,9 @@ import (
 )
 
 type CommentRepository interface {
-	GetComment(id int) model.Comment
-	GetComments() []model.Comment
-	Create(td model.Comment)
-	Update(td model.Comment)
-	Delete(td model.Comment)
+	GetComment(id int) (result *model.Comment, err error)
+	GetComments() (result []model.Comment, err error)
+	Create(td model.Comment) error
+	Update(td model.Comment) error
+	Delete(td model.Comment) error
 }

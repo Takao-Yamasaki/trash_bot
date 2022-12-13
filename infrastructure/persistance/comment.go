@@ -16,29 +16,51 @@ func NewCommentPersistance(conn *gorm.DB, c repository.CommentRepository) *comme
 }
 
 // 1件の取得
-func (co *commentPersistance) GetComment(id int) model.Comment {
+func (co *commentPersistance) GetComment(id int) (result *model.Comment, err error) {
+	
 	var comment model.Comment
-	co.Conn.First(&comment)
+	if result := co.Conn.First(&comment, id); result.Error != nil {
+		err := result.Error
+		return nil, err
+	}
 
-	return comment
+	return &comment, nil
 }
 
 // 一覧の取得
-func (co *commentPersistance) GetComments() []model.Comment {
+func (co *commentPersistance) GetComments() (result []model.Comment, err error) {
+	
 	var cms []model.Comment
-	co.Conn.Find(&cms)
-	return cms
+	if result := co.Conn.Find(&cms); result.Error != nil {
+		err := result.Error
+		return nil, err
+	}
+	return cms, nil
 }
 
 // 登録
-func (co *commentPersistance) Create(cm model.Comment) {
-	co.Conn.Create(&cm)
+func (co *commentPersistance) Create(cm model.Comment) error {
+	if result := co.Conn.Create(&cm); result.Error != nil {
+		err := result.Error
+		return err
+	}
+	return nil
 }
 
-func (co *commentPersistance) Update(cm model.Comment) {
-	co.Conn.Save(&cm)
+// 更新
+func (co *commentPersistance) Update(cm model.Comment) error {
+	if result := co.Conn.Save(&cm); result.Error != nil {
+		err := result.Error
+		return err
+	}
+	return nil
 }
 
-func (co *commentPersistance) Delete(cm model.Comment) {
-	co.Conn.Delete(&cm)
+// 削除
+func (co *commentPersistance) Delete(cm model.Comment) error {
+	if result := co.Conn.Delete(&cm); result.Error != nil {
+		err := result.Error
+		return err
+	}
+	return nil
 }

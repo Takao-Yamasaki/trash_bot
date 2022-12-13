@@ -49,7 +49,7 @@ func main() {
 
 	// Comment
 	router.GET("/comment/index", commentController.IndexComment)
-	router.GET("/comment/:id", commentController.DetailsComment)
+	router.GET("/comment/:id", commentController.DetailComment)
 	router.POST("/comment/create", commentController.CreateComment)
 	router.POST("/comment/update", commentController.UpdateComment)
 	router.POST("/comment/delete", commentController.DeleteComment)

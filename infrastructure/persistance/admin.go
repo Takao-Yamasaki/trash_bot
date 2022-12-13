@@ -16,31 +16,50 @@ func NewAdminPersistance(conn *gorm.DB, c repository.AdminRepository) *adminPers
 }
 
 // 1件の取得
-func (am *adminPersistance) GetAdmin(id int) model.Admin {
+func (am *adminPersistance) GetAdmin(id int) (result *model.Admin, err error) {
 	var ad model.Admin
-	am.Conn.First(&ad, id)
+	if result := am.Conn.First(&ad, id); result.Error != nil {
+		err := result.Error
+		return nil, err
+	}
 
-	return ad
+	return &ad, nil
 }
 
 // 一覧の取得
-func (am *adminPersistance) GetAdmins() []model.Admin {
+func (am *adminPersistance) GetAdmins() (result []model.Admin, err error) {
+	
 	var ads []model.Admin
-	am.Conn.Find(&ads)
-	return ads
+	if result := am.Conn.Find(&ads); result.Error != nil {
+		err := result.Error
+		return nil, err
+	}
+	return ads, nil
 }
 
 // 登録
-func (am *adminPersistance) Create(ad model.Admin) {
-	am.Conn.Create(&ad)
+func (am *adminPersistance) Create(ad model.Admin) error {
+	if result := am.Conn.Create(&ad); result.Error != nil {
+		err := result.Error
+		return err
+	}
+	return nil
 }
 
 // 更新
-func (am *adminPersistance) Update(ad model.Admin) {
-	am.Conn.Save(&ad)
+func (am *adminPersistance) Update(ad model.Admin) error {
+	if result := am.Conn.Save(&ad); result.Error != nil {
+		err := result.Error
+		return err
+	}
+	return nil
 }
 
 // 削除
-func (am *adminPersistance) Delete(ad model.Admin) {
-	am.Conn.Delete(&ad)
+func (am *adminPersistance) Delete(ad model.Admin) error {
+	if result := am.Conn.Delete(&ad); result.Error != nil {
+		err := result.Error
+		return err
+	}
+	return nil
 }
