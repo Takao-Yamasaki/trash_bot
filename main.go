@@ -1,13 +1,14 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
 	sqlite "trash_bot/config/database"
 
-	"github.com/gin-gonic/gin"
 
 	"trash_bot/controller"
 	"trash_bot/domain/repository"
 	"trash_bot/infrastructure/persistance"
+	"trash_bot/usecase"
 )
 
 func main() {
@@ -18,7 +19,8 @@ func main() {
 	// trash DI(Dependency Injection: オブジェクトの注入)
 	var trashDayRepository repository.TrashDayRepository
 	trashDayPersistance := persistance.NewTrashDayPersistance(db, trashDayRepository)
-	trashDayController := controller.NewTrashDayController(trashDayPersistance)
+	trashDayUseCase := usecase.NewTrashDayUseCase(trashDayPersistance)
+	trashDayController := controller.NewTrashDayController(trashDayUseCase)
 
 	// admin DI
 	var adminRepository repository.AdminRepository

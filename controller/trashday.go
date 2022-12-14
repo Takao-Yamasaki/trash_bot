@@ -3,25 +3,24 @@ package controller
 import (
 	"fmt"
 	"strconv"
-	"trash_bot/domain/model"
-	"trash_bot/domain/repository"
+	"trash_bot/usecase"
 
 	"github.com/gin-gonic/gin"
 )
 
 type trashDayController struct {
-	trashDayRepository repository.TrashDayRepository
+	trashDayUseCase usecase.TrashDayUseCase
 }
 
-func NewTrashDayController(tr repository.TrashDayRepository) trashDayController {
+func NewTrashDayController(tu usecase.TrashDayUseCase) trashDayController {
 	return trashDayController{
-		trashDayRepository: tr,
+		trashDayUseCase: tu,
 	}
 }
 
 // 一覧の取得
 func (tc *trashDayController) IndexTrashDay(c *gin.Context) {
-	tds, err := tc.trashDayRepository.GetTrashDays()
+	tds, err := tc.trashDayUseCase.GetTrashDays()
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})
@@ -38,7 +37,7 @@ func (tc *trashDayController) DetailTrashDay(c *gin.Context) {
 		c.HTML(400, "400.html", gin.H{"error": err.Error()})
 		return
 	}
-	td, err := tc.trashDayRepository.GetTrashDay(id)
+	td, err := tc.trashDayUseCase.GetTrashDay(id)
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})
@@ -65,8 +64,12 @@ func (tc *trashDayController) CreateTrashDay(c *gin.Context) {
 	day := form.Day
 	trash := form.Trash
 
-	td := model.TrashDay{Day: day, Trash: trash}
-	tc.trashDayRepository.Create(td)
+	err := tc.trashDayUseCase.CreateTrashDay(day, trash)
+	if err != nil {
+		fmt.Println(err)
+		c.HTML(500, "500.html", gin.H{"error": err.Error()})
+		return
+	}
 
 	c.Redirect(301, "/trash-day/index")
 }
@@ -97,16 +100,7 @@ func (tc *trashDayController) UpdateTrashDay(c *gin.Context) {
 	day := form.Day
 	trash := form.Trash
 
-	td, err := tc.trashDayRepository.GetTrashDay(id)
-	if err != nil {
-		fmt.Println(err)
-		c.HTML(500, "500.html", gin.H{"error": err.Error()})
-		return
-	}
-	
-	td.Day = day
-	td.Trash = trash
-	err = tc.trashDayRepository.Update(*td)
+	err = tc.trashDayUseCase.UpdateTrashDay(id, day, trash)
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})
@@ -137,14 +131,7 @@ func (tc *trashDayController) DeleteTrashDay(c *gin.Context) {
 		return
 	}
 
-	td, err := tc.trashDayRepository.GetTrashDay(id)
-	if err != nil {
-		fmt.Println(err)
-		c.HTML(500, "500.html", gin.H{"error": err.Error()})
-		return
-	}
-	
-	err = tc.trashDayRepository.Delete(*td)
+	err = tc.trashDayUseCase.DeleteTrashDay(id)
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})
