@@ -25,7 +25,8 @@ func main() {
 	// admin DI
 	var adminRepository repository.AdminRepository
 	adminPersistance := persistance.NewAdminPersistance(db, adminRepository)
-	adminController := controller.NewAdminController(adminPersistance)
+	adminUseCase := usecase.NewAdminUseCase(adminPersistance)
+	adminController := controller.NewAdminController(adminUseCase)
 
 	// comment DI
 	var commentRepository repository.CommentRepository
