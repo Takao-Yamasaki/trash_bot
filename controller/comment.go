@@ -2,26 +2,25 @@ package controller
 
 import (
 	"fmt"
-	"strconv"
-	"trash_bot/domain/model"
-	"trash_bot/domain/repository"
-
 	"github.com/gin-gonic/gin"
+	"trash_bot/usecase"
+	"strconv"
+
 )
 
 type commentController struct {
-	commentRepository repository.CommentRepository
+	commentUseCase usecase.CommentUseCase
 }
 
-func NewCommentController(cr repository.CommentRepository) commentController {
+func NewCommentController(cu usecase.CommentUseCase) commentController {
 	return commentController{
-		commentRepository: cr,
+		commentUseCase: cu,
 	}
 }
 
 // 一覧の取得
 func (cc *commentController) IndexComment(c *gin.Context) {
-	comments, err := cc.commentRepository.GetComments()
+	comments, err := cc.commentUseCase.GetComments()
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})
@@ -39,7 +38,7 @@ func (cc *commentController) DetailComment(c *gin.Context) {
 		return
 	}
 
-	comment, err := cc.commentRepository.GetComment(id)
+	comment, err := cc.commentUseCase.GetComment(id)
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})
@@ -64,8 +63,7 @@ func (cc *commentController) CreateComment(c *gin.Context) {
 	}
 	
 	contents := form.Contents
-	comment := model.Comment{Contents: contents}
-	err := cc.commentRepository.Create(comment)
+	err := cc.commentUseCase.CreateComment(contents)
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})
@@ -82,8 +80,8 @@ func (cc *commentController) UpdateComment(c *gin.Context) {
 		ID string `form:"id" binding:"required"`
 		Contents string `form:"contents" binding:"required"`
 	}
-	
-	var  form RequestDataField
+
+	var form RequestDataField
 
 	if err := c.ShouldBind(&form); err != nil {
 		fmt.Println(err)
@@ -99,15 +97,7 @@ func (cc *commentController) UpdateComment(c *gin.Context) {
 
 	contents := form.Contents
 
-	comment, err := cc.commentRepository.GetComment(id)
-	if err != nil {
-		fmt.Println(err)
-		c.HTML(500, "500.html", gin.H{"error": err.Error()})
-		return
-	}
-
-	comment.Contents = contents
-	err = cc.commentRepository.Update(*comment)
+	err = cc.commentUseCase.UpdateComment(id,contents)
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})
@@ -138,14 +128,7 @@ func (cc *commentController) DeleteComment(c *gin.Context) {
 		return
 	}
 
-	comment, err := cc.commentRepository.GetComment(id)
-	if err != nil {
-		fmt.Println(err)
-		c.HTML(500, "500.html", gin.H{"error": err.Error()})
-		return
-	}
-
-	err = cc.commentRepository.Delete(*comment)
+	err = cc.commentUseCase.DeleteComment(id)
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})

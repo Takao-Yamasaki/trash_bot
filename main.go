@@ -31,7 +31,8 @@ func main() {
 	// comment DI
 	var commentRepository repository.CommentRepository
 	commentPersistance  := persistance.NewCommentPersistance(db, commentRepository)
-	commentController := controller.NewCommentController(commentPersistance)
+	commentUseCase := usecase.NewCommentUseCase(commentPersistance)
+	commentController := controller.NewCommentController(commentUseCase)
 
 	router := gin.Default()
 	router.LoadHTMLGlob("view/**/*")
