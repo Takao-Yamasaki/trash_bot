@@ -1,17 +1,17 @@
 package usecase
 
 import (
-	"trash_bot/domain/model"
+	"trash_bot/domain/model/trashday"
 	"trash_bot/domain/repository"
 
 )
 
 type TrashDayUseCase interface {
-	GetTrashDay(id int) (result *model.TrashDay, err error)
-	GetTrashDays() (result []model.TrashDay, err error)
+	GetTrashDay(id string) (result *trashday.TrashDay, err error)
+	GetTrashDays() (result []trashday.TrashDay, err error)
 	CreateTrashDay(day string, trash string) error
-	UpdateTrashDay(id int, day string, trash string) error
-	DeleteTrashDay(id int) error
+	UpdateTrashDay(id string, day string, trash string) error
+	DeleteTrashDay(id string) error
 }
 
 type trashDayUseCase struct {
@@ -25,7 +25,7 @@ func NewTrashDayUseCase(tr repository.TrashDayRepository) TrashDayUseCase {
 }
 
 // １件の取得
-func (tu *trashDayUseCase) GetTrashDay(id int) (result *model.TrashDay, err error) {
+func (tu *trashDayUseCase) GetTrashDay(id string) (result *trashday.TrashDay, err error) {
 	td, err := tu.trashDayRepository.GetTrashDay(id)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (tu *trashDayUseCase) GetTrashDay(id int) (result *model.TrashDay, err erro
 }
 
 // 一覧の取得
-func (tu *trashDayUseCase) GetTrashDays() (result []model.TrashDay, err error) {
+func (tu *trashDayUseCase) GetTrashDays() (result []trashday.TrashDay, err error) {
 	tds, err := tu.trashDayRepository.GetTrashDays()
 	if err != nil {
 		return nil, err
@@ -44,8 +44,11 @@ func (tu *trashDayUseCase) GetTrashDays() (result []model.TrashDay, err error) {
 
 // 登録
 func (tu *trashDayUseCase) CreateTrashDay(day string, trash string) error {
-	td := model.TrashDay{Day: day, Trash: trash}
-	err := tu.trashDayRepository.Create(td)
+	td, err := trashday.Create(day, trash)
+	if err != nil {
+		return err
+	}
+	err = tu.trashDayRepository.InsertTrashDay(td)
 	if err != nil {
 		return err
 	}
@@ -53,15 +56,20 @@ func (tu *trashDayUseCase) CreateTrashDay(day string, trash string) error {
 }
 
 // 更新
-func (tu *trashDayUseCase) UpdateTrashDay(id int, day string, trash string) error {
-	td, err := tu.trashDayRepository.GetTrashDay(id)
+func (tu *trashDayUseCase) UpdateTrashDay(id string, day string, trash string) error {
+	current_trashDay, err := tu.trashDayRepository.GetTrashDay(id)
 	if err != nil {
 		return err
 	}
-	
-	td.Day = day
-	td.Trash = trash
-	err = tu.trashDayRepository.Update(*td)
+
+	trashDayId := string(current_trashDay.GetTrashDayId())
+
+	update_trashDay, err := trashday.New(trashDayId, day, trash)
+	if err != nil {
+		return err
+	}
+
+	err = tu.trashDayRepository.UpdateTrashDay(update_trashDay)
 	if err != nil {
 		return err
 	}
@@ -69,13 +77,13 @@ func (tu *trashDayUseCase) UpdateTrashDay(id int, day string, trash string) erro
 }
 
 // 削除
-func (tu *trashDayUseCase) DeleteTrashDay(id int) error {
+func (tu *trashDayUseCase) DeleteTrashDay(id string) error {
 	td, err := tu.trashDayRepository.GetTrashDay(id)
 	if err != nil {
 		return err
 	}
 
-	err = tu.trashDayRepository.Delete(*td)
+	err = tu.trashDayRepository.DeleteTrashDay(td)
 	if err != nil {
 		return err
 	}

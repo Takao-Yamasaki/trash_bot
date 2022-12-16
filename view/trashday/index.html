@@ -16,7 +16,7 @@
     <table border="1">
         {{ range .tds }}
             <tr>
-                <td><a href ="/trash-day/{{.ID}}">{{ .ID }}</a></td>
+                <td><a href ="/trash-day/{{.TrashDayId}}">{{.TrashDayId}}</a></td>
                 <td>曜日: {{ .Day }}</td>
                 <td>収集物: {{ .Trash }}</td>
             </tr>

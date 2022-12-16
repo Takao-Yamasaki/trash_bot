@@ -3,43 +3,56 @@ package persistance
 import (
 	"gorm.io/gorm"
 
-	"trash_bot/domain/model"
+	"trash_bot/domain/model/trashday"
 	"trash_bot/domain/repository"
+	"trash_bot/infrastructure/dto"
 )
 
 type trashDayPersistance struct {
 	Conn *gorm.DB
 }
 
-func NewTrashDayPersistance(conn *gorm.DB, c repository.TrashDayRepository) *trashDayPersistance {
+func NewTrashDayPersistance(conn *gorm.DB) repository.TrashDayRepository {
 	return &trashDayPersistance{Conn: conn}
 }
 
 // １件の取得
-func (tr *trashDayPersistance) GetTrashDay(id int) (result *model.TrashDay, err error) {
-	var td model.TrashDay
-	if result := tr.Conn.First(&td, id); result.Error != nil {
+func (tp *trashDayPersistance) GetTrashDay(id string) (result *trashday.TrashDay, err error) {
+	var td dto.TrashDay
+	if result := tp.Conn.Where("trash_day_id = ?", id).First(&td); result.Error != nil {
 		err := result.Error
 		return nil, err
 	}
 
-	return &td, nil
+	result_trashDay, err := dto.AdaptTrashDay(&td)
+	if err != nil {
+		return nil, err
+	}
+
+	return result_trashDay, nil
 }
 
 // 一覧の取得
-func (tr *trashDayPersistance) GetTrashDays() (result []model.TrashDay, err error) {
-	var tds []model.TrashDay
-	if result := tr.Conn.Find(&tds); result.Error != nil {
+func (tp *trashDayPersistance) GetTrashDays() (result []trashday.TrashDay, err error) {
+
+	var tds []*dto.TrashDay
+	if result := tp.Conn.Find(&tds); result.Error != nil {
 		err := result.Error
 		return nil, err
 	}
 
-	return tds, nil
+	result_trashDays, err := dto.AdaptTrashDays(tds)
+	if err != nil {
+		return nil, err
+	}
+
+	return result_trashDays, nil
 }
 
-// 登録
-func (tr *trashDayPersistance) Create(td model.TrashDay) error {
-	if result := tr.Conn.Create(&td); result.Error != nil {
+func (tp *trashDayPersistance) InsertTrashDay(td *trashday.TrashDay) error {
+	converted_trashDay := dto.ConvertTrashDay(td)
+
+	if result := tp.Conn.Create(converted_trashDay); result.Error != nil {
 		err := result.Error
 		return err
 	}
@@ -47,9 +60,10 @@ func (tr *trashDayPersistance) Create(td model.TrashDay) error {
 	return nil
 }
 
-// 更新
-func (tr *trashDayPersistance) Update(td model.TrashDay) error {
-	if result := tr.Conn.Save(&td); result.Error != nil {
+func (tp *trashDayPersistance) UpdateTrashDay(td *trashday.TrashDay) error {
+	converted_trashDay := dto.ConvertTrashDay(td)
+
+	if result := tp.Conn.Save(converted_trashDay); result.Error != nil {
 		err := result.Error
 		return err
 	}
@@ -58,11 +72,13 @@ func (tr *trashDayPersistance) Update(td model.TrashDay) error {
 }
 
 // 削除
-func (tr *trashDayPersistance) Delete(td model.TrashDay) error {
-	if result := tr.Conn.Delete(&td); result.Error != nil {
+func (tp *trashDayPersistance) DeleteTrashDay(td *trashday.TrashDay) error {
+	converted_trashDay := dto.ConvertTrashDay(td)
+
+	if result := tp.Conn.Where("trash_day_id = ?", converted_trashDay.TrashDayId).Delete(converted_trashDay); result.Error != nil {
 		err := result.Error
 		return err
 	}
-	
+
 	return nil
 }

@@ -1,13 +1,13 @@
 package repository
 
 import (
-	"trash_bot/domain/model"
+	"trash_bot/domain/model/trashday"
 )
 
 type TrashDayRepository interface {
-	GetTrashDay(id int) (result *model.TrashDay, err error)
-	GetTrashDays() (result []model.TrashDay, err error)
-	Create(td model.TrashDay) error
-	Update(td model.TrashDay) error
-	Delete(td model.TrashDay) error
+	GetTrashDay(id string) (result *trashday.TrashDay, err error)
+	GetTrashDays() (result []trashday.TrashDay, err error)
+	InsertTrashDay(td *trashday.TrashDay) error
+	UpdateTrashDay(td *trashday.TrashDay) error
+	DeleteTrashDay(td *trashday.TrashDay) error
 }

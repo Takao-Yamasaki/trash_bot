@@ -2,7 +2,7 @@ package controller
 
 import (
 	"fmt"
-	"strconv"
+
 	"trash_bot/usecase"
 
 	"github.com/gin-gonic/gin"
@@ -26,30 +26,51 @@ func (tc *trashDayController) IndexTrashDay(c *gin.Context) {
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})
 		return
 	}
-	c.HTML(200, "trashday/index.html", gin.H{"tds": tds})
+	type ResultDataField struct {
+		TrashDayId string
+		Day        string
+		Trash      string
+	}
+
+	var data []ResultDataField
+	for _, td := range tds {
+		trashDayId := td.GetTrashDayId()
+		day := td.GetDay()
+		trash := td.GetTrash()
+		data = append(data, ResultDataField{TrashDayId: trashDayId, Day: day, Trash: trash})
+	}
+
+	c.HTML(200, "trashday/index.html", gin.H{"tds": data})
 }
 
 // 詳細の取得
 func (tc *trashDayController) DetailTrashDay(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		fmt.Println(err)
-		c.HTML(400, "400.html", gin.H{"error": err.Error()})
-		return
-	}
+	id := c.Param("id")
 	td, err := tc.trashDayUseCase.GetTrashDay(id)
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})
 		return
 	}
-	c.HTML(200, "trashday/detail.html", gin.H{"td": td})
+
+	type ResultDataField struct {
+		TrashDayId string
+		Day        string
+		Trash      string
+	}
+
+	data := ResultDataField{
+		TrashDayId: td.GetTrashDayId(),
+		Day:        td.GetDay(),
+		Trash:      td.GetTrash(),
+	}
+	c.HTML(200, "trashday/detail.html", gin.H{"td": data})
 }
 
 // 登録
 func (tc *trashDayController) CreateTrashDay(c *gin.Context) {
 	type RequestDataField struct {
-		Day string `form:"day" binding:"required"`
+		Day   string `form:"day" binding:"required"`
 		Trash string `form:"trash" binding:"required"`
 	}
 
@@ -76,31 +97,26 @@ func (tc *trashDayController) CreateTrashDay(c *gin.Context) {
 
 // 更新
 func (tc *trashDayController) UpdateTrashDay(c *gin.Context) {
-	
+
 	type RequestDataField struct {
-		ID string `form:"id" binding:"required"`
-		Day string	`form:"day" binding:"required"`
+		ID    string `form:"id" binding:"required"`
+		Day   string `form:"day" binding:"required"`
 		Trash string `form:"trash" binding:"required"`
 	}
-	
+
 	var form RequestDataField
-	
+
 	if err := c.ShouldBind(&form); err != nil {
 		fmt.Println(err)
 		c.HTML(400, "400.html", gin.H{"error": err.Error()})
 		return
 	}
 
-	id, err := strconv.Atoi(form.ID)
-	if err != nil {
-		c.HTML(400, "400.html", gin.H{"error": err.Error()})
-		return
-	}
-
+	id := form.ID
 	day := form.Day
 	trash := form.Trash
 
-	err = tc.trashDayUseCase.UpdateTrashDay(id, day, trash)
+	err := tc.trashDayUseCase.UpdateTrashDay(id, day, trash)
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})
@@ -124,14 +140,9 @@ func (tc *trashDayController) DeleteTrashDay(c *gin.Context) {
 		return
 	}
 
-	id, err := strconv.Atoi(form.ID)
-	if err != nil {
-		fmt.Println(err)
-		c.HTML(400, "400.html", gin.H{"error": err.Error()})
-		return
-	}
+	id := form.ID
 
-	err = tc.trashDayUseCase.DeleteTrashDay(id)
+	err := tc.trashDayUseCase.DeleteTrashDay(id)
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})

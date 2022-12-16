@@ -7,6 +7,7 @@ import (
 
 type TrashDay struct {
 	gorm.Model
+	TrashDayId string
 	Day   string
 	Trash string
 }

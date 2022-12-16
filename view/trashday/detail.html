@@ -8,7 +8,7 @@
 <body>
     <h1>ごみ収集日の詳細</h1>
     <form method="POST">
-        <p>ID: <input type="text" name="id" value="{{ .td.ID }}"></p>
+        <p>ID: <input type="text" name="id" value="{{ .td.TrashDayId }}"></p>
         <p>曜日: <input type="text" name="day" value="{{ .td.Day }}"></p>
         <p>収集物: <input type="text" name="trash" value="{{ .td.Trash }}"></p>
         <input type="submit" formaction="/trash-day/update" value="更新" />

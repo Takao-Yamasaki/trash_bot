@@ -17,9 +17,8 @@ func main() {
 	defer connect.Close()
 
 	// trash DI(Dependency Injection: オブジェクトの注入)
-	var trashDayRepository repository.TrashDayRepository
-	trashDayPersistance := persistance.NewTrashDayPersistance(db, trashDayRepository)
-	trashDayUseCase := usecase.NewTrashDayUseCase(trashDayPersistance)
+	trashDayRepository := persistance.NewTrashDayPersistance(db)
+	trashDayUseCase := usecase.NewTrashDayUseCase(trashDayRepository)
 	trashDayController := controller.NewTrashDayController(trashDayUseCase)
 
 	// admin DI
