@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"trash_bot/usecase"
-	"strconv"
 )
 
 type adminController struct {
@@ -25,18 +24,29 @@ func (ac *adminController) IndexAdmin(c *gin.Context) {
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})
 		return
 	}
-	c.HTML(200, "admin/index.html", gin.H{"admins": admins})
+
+	type ResultDataField struct {
+		AdminId string
+		Name string
+		Email string
+		Password string
+	}
+	
+		var data []ResultDataField
+		for _, admin := range admins {
+			adminId := admin.GetAdminId()
+			name := admin.GetName()
+			email := admin.GetEmail()
+			password := admin.GetPassword()
+			data = append(data, ResultDataField{AdminId: adminId, Name: name, Email: email, Password: password})
+		}
+
+	c.HTML(200, "admin/index.html", gin.H{"admins": data})
 }
 
 // 詳細の取得
 func (ac *adminController) DetailAdmin(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		fmt.Println(err)
-		c.HTML(400, "400.html", gin.H{"error": err.Error()})
-		return
-	}
-
+	id := c.Param("id")
 	admin, err := ac.adminUseCase.GetAdmin(id)
 	if err != nil {
 		fmt.Println(err)
@@ -44,7 +54,21 @@ func (ac *adminController) DetailAdmin(c *gin.Context) {
 		return
 	}
 
-	c.HTML(200, "admin/detail.html", gin.H{"admin": admin})
+	type ResultDataField struct {
+		AdminId string
+		Name string
+		Email string
+		Password string
+	}
+	
+	data := ResultDataField{
+		AdminId: admin.GetAdminId(),
+		Name: admin.GetName(),
+		Email: admin.GetEmail(),
+		Password: admin.GetPassword(),
+	}
+
+	c.HTML(200, "admin/detail.html", gin.H{"admin": data})
 }
 
 // 登録
@@ -95,17 +119,13 @@ func (ac *adminController) UpdateAdmin(c *gin.Context) {
 		return
 	}
 
-	id, err := strconv.Atoi(form.ID)
-	if err != nil {
-		c.HTML(400, "400.html", gin.H{"error": err.Error()})
-		return
-	}
-
+	id := form.ID
 	name := form.Name
 	email := form.Email
 	password := form.Password
 
-	err = ac.adminUseCase.UpdateAdmin(id, name, email, password)
+
+	err := ac.adminUseCase.UpdateAdmin(id, name, email, password)
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H {"error": err.Error()})
@@ -129,14 +149,9 @@ func (ac *adminController) DeleteAdmin(c *gin.Context) {
 		return
 	}
 
-	id, err := strconv.Atoi(form.ID)
-	if err != nil {
-		fmt.Println(err)
-		c.HTML(400, "400.html", gin.H{"error": err.Error()})
-		return
-	}
+	id := form.ID
 
-	err = ac.adminUseCase.DeleteAdmin(id)
+	err := ac.adminUseCase.DeleteAdmin(id)
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})

@@ -3,43 +3,56 @@ package persistance
 import (
 	"gorm.io/gorm"
 
-	"trash_bot/domain/model"
+	"trash_bot/domain/model/admin"
 	"trash_bot/domain/repository"
+	"trash_bot/infrastructure/dto"
 )
 
 type adminPersistance struct {
 	Conn *gorm.DB
 }
 
-func NewAdminPersistance(conn *gorm.DB, c repository.AdminRepository) *adminPersistance {
+func NewAdminPersistance(conn *gorm.DB) repository.AdminRepository {
 	return &adminPersistance{Conn: conn}
 }
 
 // 1件の取得
-func (am *adminPersistance) GetAdmin(id int) (result *model.Admin, err error) {
-	var ad model.Admin
-	if result := am.Conn.First(&ad, id); result.Error != nil {
+func (ap *adminPersistance) GetAdmin(id string) (result *admin.Admin, err error) {
+	var ad dto.Admin
+	if result := ap.Conn.Where("admin_id = ?", id).First(&ad); result.Error != nil {
 		err := result.Error
 		return nil, err
 	}
 
-	return &ad, nil
+	result_admin, err := dto.AdaptAdmin(&ad)
+	if err != nil {
+		return nil, err
+	}
+	return result_admin, nil
 }
 
 // 一覧の取得
-func (am *adminPersistance) GetAdmins() (result []model.Admin, err error) {
+func (ap *adminPersistance) GetAdmins() (result []admin.Admin, err error) {
 	
-	var ads []model.Admin
-	if result := am.Conn.Find(&ads); result.Error != nil {
+	var ads []*dto.Admin
+	if result := ap.Conn.Find(&ads); result.Error != nil {
 		err := result.Error
 		return nil, err
 	}
-	return ads, nil
+
+	result_admins, err := dto.AdaptAdmins(ads)
+	if err != nil {
+		return nil, err
+	}
+
+	return result_admins, nil
 }
 
 // 登録
-func (am *adminPersistance) Create(ad model.Admin) error {
-	if result := am.Conn.Create(&ad); result.Error != nil {
+func (ap *adminPersistance) InsertAdmin(ad *admin.Admin) error {
+	converted_admin := dto.ConvertAdmin(ad)
+
+	if result := ap.Conn.Create(converted_admin); result.Error != nil {
 		err := result.Error
 		return err
 	}
@@ -47,8 +60,10 @@ func (am *adminPersistance) Create(ad model.Admin) error {
 }
 
 // 更新
-func (am *adminPersistance) Update(ad model.Admin) error {
-	if result := am.Conn.Save(&ad); result.Error != nil {
+func (ap *adminPersistance) UpdateAdmin(ad *admin.Admin) error {
+	converted_admin := dto.ConvertAdmin(ad)
+
+	if result := ap.Conn.Where("admin_id = ?", converted_admin.AdminId).Updates(converted_admin); result.Error != nil {
 		err := result.Error
 		return err
 	}
@@ -56,8 +71,10 @@ func (am *adminPersistance) Update(ad model.Admin) error {
 }
 
 // 削除
-func (am *adminPersistance) Delete(ad model.Admin) error {
-	if result := am.Conn.Delete(&ad); result.Error != nil {
+func (ap *adminPersistance) DeleteAdmin(ad *admin.Admin) error {
+	converted_admin := dto.ConvertAdmin(ad)
+
+	if result := ap.Conn.Where("admin_id = ?", converted_admin.AdminId).Delete(&ad); result.Error != nil {
 		err := result.Error
 		return err
 	}

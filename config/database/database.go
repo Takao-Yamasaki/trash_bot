@@ -14,6 +14,7 @@ type TrashDay struct {
 
 type Admin struct {
 	gorm.Model
+	AdminId string
 	Name     string
 	Email    string
 	Password string

@@ -17,7 +17,7 @@
     <table>
         {{ range .admins }}
             <tr>
-                <td>ID: <a href="/admin/{{ .ID }}">{{ .ID }}</a></td>
+                <td>ID: <a href="/admin/{{ .AdminId }}">{{ .AdminId }}</a></td>
                 <td>名前: {{ .Name }}</td>
                 <td>Eメール: {{ .Email }}</td>
                 <td>パスワード: {{ .Password }}</td>

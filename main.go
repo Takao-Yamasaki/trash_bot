@@ -22,9 +22,8 @@ func main() {
 	trashDayController := controller.NewTrashDayController(trashDayUseCase)
 
 	// admin DI
-	var adminRepository repository.AdminRepository
-	adminPersistance := persistance.NewAdminPersistance(db, adminRepository)
-	adminUseCase := usecase.NewAdminUseCase(adminPersistance)
+	adminRepository := persistance.NewAdminPersistance(db)
+	adminUseCase := usecase.NewAdminUseCase(adminRepository)
 	adminController := controller.NewAdminController(adminUseCase)
 
 	// comment DI

@@ -1,13 +1,13 @@
 package  repository
 
 import (
-	"trash_bot/domain/model"
+	"trash_bot/domain/model/admin"
 )
 
 type AdminRepository interface {
-	GetAdmin(id int) (result *model.Admin, err error)
-	GetAdmins() (result []model.Admin, err error)
-	Create(admin model.Admin) error
-	Update(admin model.Admin) error
-	Delete(admin model.Admin) error
+	GetAdmin(id string) (result *admin.Admin, err error)
+	GetAdmins() (result []admin.Admin, err error)
+	InsertAdmin(admin *admin.Admin) error
+	UpdateAdmin(admin *admin.Admin) error
+	DeleteAdmin(admin *admin.Admin) error
 }
