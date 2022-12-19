@@ -63,7 +63,8 @@ func (tp *trashDayPersistance) InsertTrashDay(td *trashday.TrashDay) error {
 func (tp *trashDayPersistance) UpdateTrashDay(td *trashday.TrashDay) error {
 	converted_trashDay := dto.ConvertTrashDay(td)
 
-	if result := tp.Conn.Save(converted_trashDay); result.Error != nil {
+	if result := tp.Conn.Where("trash_day_id = ?", converted_trashDay.TrashDayId).
+		Updates(converted_trashDay); result.Error != nil {
 		err := result.Error
 		return err
 	}

@@ -62,7 +62,7 @@ func (tu *trashDayUseCase) UpdateTrashDay(id string, day string, trash string) e
 		return err
 	}
 
-	trashDayId := string(current_trashDay.GetTrashDayId())
+	trashDayId := current_trashDay.GetTrashDayId()
 
 	update_trashDay, err := trashday.New(trashDayId, day, trash)
 	if err != nil {
