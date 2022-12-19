@@ -1,13 +1,13 @@
 package repository
 
 import (
-	"trash_bot/domain/model"
+	"trash_bot/domain/model/comment"
 )
 
 type CommentRepository interface {
-	GetComment(id int) (result *model.Comment, err error)
-	GetComments() (result []model.Comment, err error)
-	Create(td model.Comment) error
-	Update(td model.Comment) error
-	Delete(td model.Comment) error
+	GetComment(id string) (result *comment.Comment, err error)
+	GetComments() (result []*comment.Comment, err error)
+	InsertComment(td *comment.Comment) error
+	UpdateComment(td *comment.Comment) error
+	DeleteComment(td *comment.Comment) error
 }

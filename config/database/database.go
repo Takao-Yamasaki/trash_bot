@@ -22,6 +22,7 @@ type Admin struct {
 
 type Comment struct {
 	gorm.Model
+	CommentId string
 	Contents string
 }
 

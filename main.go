@@ -6,7 +6,6 @@ import (
 
 
 	"trash_bot/controller"
-	"trash_bot/domain/repository"
 	"trash_bot/infrastructure/persistance"
 	"trash_bot/usecase"
 )
@@ -27,9 +26,8 @@ func main() {
 	adminController := controller.NewAdminController(adminUseCase)
 
 	// comment DI
-	var commentRepository repository.CommentRepository
-	commentPersistance  := persistance.NewCommentPersistance(db, commentRepository)
-	commentUseCase := usecase.NewCommentUseCase(commentPersistance)
+	commentRepository  := persistance.NewCommentPersistance(db)
+	commentUseCase := usecase.NewCommentUseCase(commentRepository)
 	commentController := controller.NewCommentController(commentUseCase)
 
 	router := gin.Default()

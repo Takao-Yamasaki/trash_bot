@@ -2,10 +2,9 @@ package controller
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"trash_bot/usecase"
-	"strconv"
 
+	"github.com/gin-gonic/gin"
 )
 
 type commentController struct {
@@ -26,18 +25,25 @@ func (cc *commentController) IndexComment(c *gin.Context) {
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})
 		return
 	}
-	c.HTML(200, "comment/index.html", gin.H{"comments": comments})
+
+	type ResultDataField struct {
+		CommentId string
+		Contents  string
+	}
+
+	var data []ResultDataField
+	for _, comment := range comments {
+		commentId := comment.GetCommentId()
+		contents := comment.GetContents()
+		data = append(data, ResultDataField{CommentId: commentId, Contents: contents})
+	}
+
+	c.HTML(200, "comment/index.html", gin.H{"comments": data})
 }
 
 // 詳細の取得
 func (cc *commentController) DetailComment(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		fmt.Println(err)
-		c.HTML(400, "400.html", gin.H{"error": err.Error()})
-		return
-	}
-
+	id := c.Param("id")
 	comment, err := cc.commentUseCase.GetComment(id)
 	if err != nil {
 		fmt.Println(err)
@@ -45,7 +51,16 @@ func (cc *commentController) DetailComment(c *gin.Context) {
 		return
 	}
 
-	c.HTML(200, "comment/detail.html", gin.H{"comment": comment})
+	type ResultDataField struct {
+		CommentId string
+		Contents  string
+	}
+
+	data := ResultDataField{
+		CommentId: comment.GetCommentId(),
+		Contents:  comment.GetContents(),
+	}
+	c.HTML(200, "comment/detail.html", gin.H{"comment": data})
 }
 
 // 登録
@@ -61,7 +76,7 @@ func (cc *commentController) CreateComment(c *gin.Context) {
 		c.HTML(400, "400.html", gin.H{"error": err.Error()})
 		return
 	}
-	
+
 	contents := form.Contents
 	err := cc.commentUseCase.CreateComment(contents)
 	if err != nil {
@@ -75,9 +90,9 @@ func (cc *commentController) CreateComment(c *gin.Context) {
 
 // 更新
 func (cc *commentController) UpdateComment(c *gin.Context) {
-	
+
 	type RequestDataField struct {
-		ID string `form:"id" binding:"required"`
+		ID       string `form:"id" binding:"required"`
 		Contents string `form:"contents" binding:"required"`
 	}
 
@@ -89,15 +104,11 @@ func (cc *commentController) UpdateComment(c *gin.Context) {
 		return
 	}
 
-	id, err := strconv.Atoi(form.ID)
-	if err != nil {
-		c.HTML(400, "400.html", gin.H{"error": err.Error()})
-		return
-	}
+	id := form.ID
 
 	contents := form.Contents
 
-	err = cc.commentUseCase.UpdateComment(id,contents)
+	err := cc.commentUseCase.UpdateComment(id, contents)
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})
@@ -121,14 +132,8 @@ func (cc *commentController) DeleteComment(c *gin.Context) {
 		return
 	}
 
-	id, err := strconv.Atoi(form.ID)
-	if err != nil {
-		fmt.Println(err)
-		c.HTML(400, "400.html", gin.H{"error": err.Error()})
-		return
-	}
-
-	err = cc.commentUseCase.DeleteComment(id)
+	id := form.ID
+	err := cc.commentUseCase.DeleteComment(id)
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(500, "500.html", gin.H{"error": err.Error()})

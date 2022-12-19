@@ -1,16 +1,16 @@
 package usecase
 
 import (
-	"trash_bot/domain/model"
+	"trash_bot/domain/model/comment"
 	"trash_bot/domain/repository"
 )
 
 type CommentUseCase interface {
-	GetComment(id int ) (result *model.Comment, err error)
-	GetComments() (result []model.Comment, err error)
+	GetComment(id string ) (result *comment.Comment, err error)
+	GetComments() (result []*comment.Comment, err error)
 	CreateComment(contents string) error
-	UpdateComment(id int, contents string) error
-	DeleteComment(id int) error
+	UpdateComment(id string, contents string) error
+	DeleteComment(id string) error
 }
 
 type commentUseCase struct {
@@ -24,7 +24,7 @@ func NewCommentUseCase(cr repository.CommentRepository) CommentUseCase {
 }
 
 // 詳細の取得
-func (cu *commentUseCase) GetComment(id int) (result *model.Comment, err error) {
+func (cu *commentUseCase) GetComment(id string) (result *comment.Comment, err error) {
 	comment, err := cu.commentRepository.GetComment(id)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (cu *commentUseCase) GetComment(id int) (result *model.Comment, err error) 
 }
 
 // 一覧の取得
-func (cu *commentUseCase) GetComments() (result []model.Comment, err error){
+func (cu *commentUseCase) GetComments() (result []*comment.Comment, err error){
 	comments, err := cu.commentRepository.GetComments()
 	if err != nil {
 		return nil, err
@@ -44,8 +44,12 @@ func (cu *commentUseCase) GetComments() (result []model.Comment, err error){
 
 // 登録
 func (cu *commentUseCase) CreateComment(contents string) error {
-	comment := model.Comment{Contents: contents}
-	err := cu.commentRepository.Create(comment)
+	comment, err := comment.Create(contents)
+	if err != nil {
+		return err
+	}
+
+	err = cu.commentRepository.InsertComment(comment)
 	if err != nil {
 		return err
 	}
@@ -54,14 +58,20 @@ func (cu *commentUseCase) CreateComment(contents string) error {
 }
 
 // 更新
-func (cu *commentUseCase) UpdateComment(id int, contents string) error {
-	comment, err := cu.commentRepository.GetComment(id)
+func (cu *commentUseCase) UpdateComment(id string, contents string) error {
+	current_comment, err := cu.commentRepository.GetComment(id)
 	if err != nil {
 		return err
 	}
 
-	comment.Contents = contents
-	err = cu.commentRepository.Update(*comment)
+	commentId := current_comment.GetCommentId() 
+	
+	update_comment, err := comment.New(commentId, contents)
+	if err != nil {
+		return err
+	}
+
+	err = cu.commentRepository.UpdateComment(update_comment)
 	if err != nil {
 		return err
 	}
@@ -70,13 +80,13 @@ func (cu *commentUseCase) UpdateComment(id int, contents string) error {
 }
 
 // 削除
-func (cu *commentUseCase) DeleteComment(id int) error {
+func (cu *commentUseCase) DeleteComment(id string) error {
 	comment, err := cu.commentRepository.GetComment(id)
 	if err != nil {
 		return err
 	}
 
-	err = cu.commentRepository.Delete(*comment)
+	err = cu.commentRepository.DeleteComment(comment)
 	if err != nil {
 		return err
 	}

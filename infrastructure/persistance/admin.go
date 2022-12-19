@@ -34,7 +34,7 @@ func (ap *adminPersistance) GetAdmin(id string) (result *admin.Admin, err error)
 // 一覧の取得
 func (ap *adminPersistance) GetAdmins() (result []admin.Admin, err error) {
 	
-	var ads []*dto.Admin
+var ads []*dto.Admin
 	if result := ap.Conn.Find(&ads); result.Error != nil {
 		err := result.Error
 		return nil, err
