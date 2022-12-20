@@ -3,7 +3,6 @@ package usecase
 import (
 	"trash_bot/domain/model/trashday"
 	"trash_bot/domain/repository"
-
 )
 
 type TrashDayUseCase interface {

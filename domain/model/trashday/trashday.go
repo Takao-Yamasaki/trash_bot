@@ -1,14 +1,14 @@
 package trashday
 
 import (
-	"fmt"
 	"github.com/google/uuid"
+	"trash_bot/domain/model/vo"
 )
 
 type TrashDay struct {
-	trashDayId trashDayId
-	day        day
-	trash      trash
+	trashDayId vo.UuId
+	day        vo.Day
+	trash      vo.Trash
 }
 
 type trashDayId string
@@ -16,17 +16,17 @@ type day string
 type trash string
 
 func New(trashDayId string, day string, trash string) (*TrashDay, error) {
-	createdTrashDayId, err := newTrashDayId(trashDayId)
+	createdTrashDayId, err := vo.NewUuid(trashDayId)
 	if err != nil {
 		return nil, err
 	}
 
-	createdDay, err := newDay(day)
+	createdDay, err := vo.NewDay(day)
 	if err != nil {
 		return nil, err
 	}
 
-	createdTrash, err := newTrash(trash)
+	createdTrash, err := vo.NewTrash(trash)
 	if err != nil {
 		return nil, err
 	}
@@ -63,37 +63,4 @@ func (td TrashDay) GetDay() string {
 
 func (td TrashDay) GetTrash() string {
 	return string(td.trash)
-}
-
-// valueコンストラクタ
-func newTrashDayId(value string) (*trashDayId, error) {
-	if value == "" {
-		err := fmt.Errorf("%s", "empty arg:trashDayId NewTrashDayId()")
-		return nil, err
-	}
-
-	trashDayId := trashDayId(value)
-
-	return &trashDayId, nil
-}
-
-func newDay(value string) (*day, error) {
-	if value == "" {
-		err := fmt.Errorf("%s", "empty arg:day newDay()")
-		return nil, err
-	}
-
-	day := day(value)
-
-	return &day, nil
-}
-
-func newTrash(value string) (*trash, error) {
-	if value == "" {
-		err := fmt.Errorf("%s", "empty arg:trash newTrash()")
-		return nil, err
-	}
-	trash := trash(value)
-
-	return &trash, nil
 }
