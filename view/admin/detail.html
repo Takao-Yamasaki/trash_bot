@@ -3,17 +3,17 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>管理者詳細</title>
+    <title>[Admin]Detail</title>
 </head>
 <body>
-    <h1>管理者の詳細</h1>
+    <h1>[Admin]Detail</h1>
     <form method="POST">
-        <p>ID: <input type="text" name="id" value="{{ .admin.AdminId }}"></p>
-        <p>名前: <input type="text" name="name" value="{{ .admin.Name }}"></p>
-        <p>Eメール: <input type="text" name="email" value="{{ .admin.Email }}"></p>
-        <p>パスワード: <input type="text" name="password" value="{{ .admin.Password }}"></p>
-        <input type="submit" formaction="/admin/update" value="更新" />
-        <input type="submit" formaction="/admin/delete" value="削除" />
+        <p>ID: {{ .admin.AdminId }} <input type="hidden" name="id" value="{{ .admin.AdminId }}" /></p>
+        <p>Name: <input type="text" name="name" value="{{ .admin.Name }}" /></p>
+        <p>Email: <input type="text" name="email" value="{{ .admin.Email }}" /></p>
+        <p>Password: <input type="text" name="password" value="" /></p>
+        <input type="submit" formaction="/admin/update" value="Update" />
+        <input type="submit" formaction="/admin/delete" value="Delete" />
     </form>
 </body>
 </html>

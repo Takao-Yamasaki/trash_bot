@@ -3,24 +3,22 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>管理者登録</title>
+    <title>[Admin]Register</title>
 </head>
 <body>
-    <h1>管理者登録</h1>
+    <h2>[Admin]Register</h2>
     <form method="POST" action="/admin/create">
-        <p>名前: <input type="text" name="name" value=""></p>
-        <p>Eメール: <input type="text" name="email" value=""></p>
-        <p>パスワード: <input type="text" name="password" value=""></p>
-        <input type="submit" value="登録">
+        <p>Name: <input type="text" name="name" value=""></p>
+        <p>Email: <input type="text" name="email" value=""></p>
+        <p>Password: <input type="text" name="password" value=""></p>
+        <input type="submit" value="作成">
     </form>
     <hr>
-    <table>
+    <table border="1">
         {{ range .admins }}
             <tr>
                 <td>ID: <a href="/admin/{{ .AdminId }}">{{ .AdminId }}</a></td>
-                <td>名前: {{ .Name }}</td>
-                <td>Eメール: {{ .Email }}</td>
-                <td>パスワード: {{ .Password }}</td>
+                <td>Name: {{ .Name }}</td>
             </tr>
         {{ end }}
     </table>
