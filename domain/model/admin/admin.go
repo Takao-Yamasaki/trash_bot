@@ -1,39 +1,40 @@
 package admin
 
 import (
-	"fmt"
+	"trash_bot/domain/model/vo"
+
 	"github.com/google/uuid"
 )
 
 type Admin struct {
 	adminId  adminId
-	name	 name
+	name     name
 	email    email
 	password password
 }
 
-type adminId string
-type name string
-type email string
-type password string
+type adminId vo.UuId
+type name vo.Name
+type email vo.Email
+type password vo.Password
 
 func New(adminId string, name string, email string, password string) (*Admin, error) {
-	createdAdminId, err := newAdminId(adminId)
+	createdAdminId, err := vo.NewUuid(adminId)
 	if err != nil {
 		return nil, err
 	}
 
-	createdName, err := newName(name)
+	createdName, err := vo.NewName(name)
 	if err != nil {
 		return nil, err
 	}
 
-	createdEmail, err := newEmail(email)
+	createdEmail, err := vo.NewEmail(email)
 	if err != nil {
 		return nil, err
 	}
 
-	createdPassword, err := newPassword(password)
+	createdPassword, err := vo.NewPassword(password)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +48,6 @@ func New(adminId string, name string, email string, password string) (*Admin, er
 
 	return &admin, nil
 }
-
 
 func Create(name string, email string, password string) (*Admin, error) {
 	adminId := uuid.New().String()
@@ -71,53 +71,8 @@ func (ad Admin) GetName() string {
 
 func (ad Admin) GetEmail() string {
 	return string(ad.email)
-} 
+}
 
 func (ad Admin) GetPassword() string {
 	return string(ad.password)
-}
-
-// value constructors
-func newAdminId(value string) (*adminId, error) {
-	if value == "" {
-		err := fmt.Errorf("%s", "empty arg:adminId NewAdminId()")
-		return nil, err
-	}
-
-	adminId := adminId(value)
-
-	return &adminId, nil
-}
-
-func newName(value string) (*name, error) {
-	if value == "" {
-		err := fmt.Errorf("%s", "empty arg:name newName()")
-		return nil, err
-	}
-
-	name := name(value)
-
-	return &name, nil
-}
-
-func newEmail(value string) (*email, error) {
-	if value == "" {
-		err := fmt.Errorf("%s", "empty arg:email newEmail()")
-		return nil, err
-	}
-
-	email := email(value)
-
-	return &email, nil
-}
-
-func newPassword(value string) (*password, error) {
-	if value == "" {
-		err := fmt.Errorf("%s", "empty arg:password newPassword()")
-		return nil, err
-	}
-
-	password := password(value)
-	
-	return &password, nil
 }
