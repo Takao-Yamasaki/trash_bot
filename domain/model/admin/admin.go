@@ -7,16 +7,11 @@ import (
 )
 
 type Admin struct {
-	adminId  adminId
-	name     name
-	email    email
-	password password
+	adminId  vo.UuId
+	name     vo.Name
+	email    vo.Email
+	password vo.Password
 }
-
-type adminId vo.UuId
-type name vo.Name
-type email vo.Email
-type password vo.Password
 
 func New(adminId string, name string, email string, password string) (*Admin, error) {
 	createdAdminId, err := vo.NewUuid(adminId)
