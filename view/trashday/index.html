@@ -3,22 +3,22 @@
 {{ define "trashday/index.html" }}
 <head>
     <meta charset="UTF-8">
-    <title>ごみ収集日登録</title>
+    <title>[TrashDay]Register</title>
 </head>
 <body>
-    <h1>ごみ収集日登録</h1>
+    <h1>[TrashDay]Register</h1>
     <form method="POST" action="/trash-day/create">
-        <p>曜日: <input type="text" name="day" value=""></p>
-        <p>収集物: <input type="text" name="trash" value="" ></p>
-        <input type="submit" value="登録">
+        <p>Day: <input type="text" name="day" value=""></p>
+        <p>Trash: <input type="text" name="trash" value="" ></p>
+        <input type="submit" value="Register">
     </form>
     <hr>
     <table border="1">
         {{ range .tds }}
             <tr>
-                <td><a href ="/trash-day/{{.TrashDayId}}">{{.TrashDayId}}</a></td>
-                <td>曜日: {{ .Day }}</td>
-                <td>収集物: {{ .Trash }}</td>
+                <td>ID:<a href ="/trash-day/{{.TrashDayId}}">{{.TrashDayId}}</a></td>
+                <td>Day: {{ .Day }}</td>
+                <td>Trash: {{ .Trash }}</td>
             </tr>
         {{ end }}
     </table>

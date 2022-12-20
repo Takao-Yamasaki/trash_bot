@@ -3,20 +3,20 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>コメント登録</title>
+  <title>[Comment]Register</title>
 </head>
 <body>
-  <h1>コメント登録</h1>
+  <h1>[Comment]Register</h1>
   <form method="POST" action="/comment/create">
-    <p>コメント内容: <input type="text" name="contents" value=""></p>
-    <input type="submit" value="登録">
+    <p>Contents: <input type="text" name="contents" value=""></p>
+    <input type="submit" value="Register">
   </form>
   <hr border="1">
   <table>
     {{ range .comments }}
       <tr>
-        <td><a href="/comment/{{ .CommentId }}">{{ .CommentId }}</a></td>
-        <td>コメント内容: {{ .Contents }}</td>
+        <td>ID: <a href="/comment/{{ .CommentId }}">{{ .CommentId }}</a></td>
+        <td>Contents: {{ .Contents }}</td>
       </tr>
     {{ end }}
   </table>

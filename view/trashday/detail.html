@@ -3,16 +3,16 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ごみ収集日詳細</title>
+    <title>[TrashDay]Detail</title>
 </head>
 <body>
-    <h1>ごみ収集日の詳細</h1>
+    <h1>[TrashDay]Detail</h1>
     <form method="POST">
-        <p>ID: <input type="text" name="id" value="{{ .td.TrashDayId }}"></p>
-        <p>曜日: <input type="text" name="day" value="{{ .td.Day }}"></p>
-        <p>収集物: <input type="text" name="trash" value="{{ .td.Trash }}"></p>
-        <input type="submit" formaction="/trash-day/update" value="更新" />
-        <input type="submit" formaction="/trash-day/delete" value="削除" />
+        <p>ID: {{ .td.TrashDayId }}<input type="hidden" name="id" value="{{ .admin.AdminId }}" /></p>
+        <p>Day: <input type="text" name="day" value="{{ .td.Day }}"></p>
+        <p>Trash: <input type="text" name="trash" value="{{ .td.Trash }}"></p>
+        <input type="submit" formaction="/trash-day/update" value="Update" />
+        <input type="submit" formaction="/trash-day/delete" value="Delete" />
     </form>
 </body>
 </html>
