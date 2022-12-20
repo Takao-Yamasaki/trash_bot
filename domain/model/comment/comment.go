@@ -1,25 +1,23 @@
 package comment
 
 import (
-	"fmt"
+	"trash_bot/domain/model/vo"
+
 	"github.com/google/uuid"
 )
 
 type Comment struct {
-	commentId commentId
-	contents contents
+	commentId vo.UuId
+	contents vo.Contents
 }
 
-type commentId string
-type contents string
-
 func New(commentId string, contents string) (*Comment, error) {
-	createdCommentId, err := newCommentId(commentId)
+	createdCommentId, err := vo.NewUuid(commentId)
 	if err != nil {
 		return nil, err
 	}
 
-	createdContents, err := newContents(contents)
+	createdContents, err := vo.NewContents(contents)
 	if err != nil {
 		return nil, err
 	}
@@ -50,27 +48,4 @@ func (c Comment) GetCommentId() string {
 
 func (c Comment) GetContents() string {
 	return string(c.contents)
-}
-
-// value constructors
-func newCommentId(value string) (*commentId, error) {
-	if value == "" {
-		err := fmt.Errorf("%s", "empty arg: newCommentId()")
-		return nil, err
-	}
-	
-	commentId := commentId(value)
-
-	return  &commentId, nil
-}
-
-func newContents(value string) (*contents, error) {
-	if value == "" {
-		err := fmt.Errorf("%s", "empty arg: newComments()")
-		return nil, err
-	}
-
-	contents := contents(value)
-
-	return &contents, nil
 }
