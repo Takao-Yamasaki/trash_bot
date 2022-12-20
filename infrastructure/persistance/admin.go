@@ -16,6 +16,21 @@ func NewAdminPersistance(conn *gorm.DB) repository.AdminRepository {
 	return &adminPersistance{Conn: conn}
 }
 
+func (ap *adminPersistance) GetAdminByEmail(email string) (result *admin.Admin, err error) {
+	var admin dto.Admin
+	if result := ap.Conn.Where("email = ?", email).First(&admin); result.Error != nil {
+		err := result.Error
+		return nil, err
+	}
+
+	result_admin, err := dto.AdaptAdmin(&admin)
+	if err != nil {
+		return nil, err
+	}
+
+	return result_admin, nil
+}
+
 // 1件の取得
 func (ap *adminPersistance) GetAdmin(id string) (result *admin.Admin, err error) {
 	var ad dto.Admin

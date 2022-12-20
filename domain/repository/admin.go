@@ -5,6 +5,7 @@ import (
 )
 
 type AdminRepository interface {
+	GetAdminByEmail(email string) (result *admin.Admin, err error)
 	GetAdmin(id string) (result *admin.Admin, err error)
 	GetAdmins() (result []admin.Admin, err error)
 	InsertAdmin(admin *admin.Admin) error

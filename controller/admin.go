@@ -2,7 +2,9 @@ package controller
 
 import (
 	"fmt"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 	"trash_bot/usecase"
 )
 
@@ -14,6 +16,55 @@ func NewAdminController(au usecase.AdminUseCase) adminController {
 	return adminController{
 		adminUseCase: au,
 	}
+
+}
+
+func (ad *adminController) Login(c *gin.Context) {
+	c.HTML(200, "login_logout/login.html", gin.H{})
+}
+
+func (ad *adminController) Logout(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Clear()
+	session.Save()
+	c.HTML(200, "login_logout/logout.html", gin.H{})
+}
+
+func (ad *adminController) AuthLogin(c *gin.Context) {
+	type RequestDataField struct {
+		Email	string	`form:"email" binding:"required"`
+		Password string `form:"password" binding:"required"`
+	}
+
+	var form RequestDataField
+
+	if err := c.ShouldBind(&form); err != nil {
+		fmt.Println(err)
+		c.HTML(400, "400.html", gin.H{"error": err.Error()})
+		return
+	}
+
+	email := form.Email
+	password := form.Password
+
+	admin, err := ad.adminUseCase.GetAdminForAuth(email)
+	if err != nil {
+		fmt.Println(err)
+		c.HTML(400, "400.html", gin.H{"error": err.Error()})
+		return
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(admin.GetPassword()), []byte(password))
+	if err != nil {
+		fmt.Println(err.Error())
+		c.HTML(401, "login_logout/login.html", gin.H{})
+		return
+	}
+
+	session := sessions.Default(c)
+	session.Set("AdminId", admin.GetAdminId())
+	session.Save()
+	c.Redirect(301, "/admin/index")
 }
 
 // 一覧の取得
@@ -60,7 +111,7 @@ func (ac *adminController) DetailAdmin(c *gin.Context) {
 		Email string
 		Password string
 	}
-	
+
 	data := ResultDataField{
 		AdminId: admin.GetAdminId(),
 		Name: admin.GetName(),
@@ -78,7 +129,7 @@ func (ac *adminController) CreateAdmin(c *gin.Context) {
 		Email string `form:"email" binding:"required"`
 		Password string `form:"password" binding:"required"`
 	}
-	
+
 	var form RequestDataField
 
 	if err := c.ShouldBind(&form); err != nil {
@@ -87,9 +138,10 @@ func (ac *adminController) CreateAdmin(c *gin.Context) {
 		return
 	}
 
+	hash, _ := bcrypt.GenerateFromPassword([]byte(form.Password), 12)
 	name := form.Name
 	email := form.Email
-	password := form.Password
+	password := string(hash)
 
 
 	err := ac.adminUseCase.CreateAdmin(name, email, password)
@@ -119,10 +171,11 @@ func (ac *adminController) UpdateAdmin(c *gin.Context) {
 		return
 	}
 
+	hash, _ := bcrypt.GenerateFromPassword([]byte(form.Password), 12)
 	id := form.ID
 	name := form.Name
 	email := form.Email
-	password := form.Password
+	password := string(hash)
 
 
 	err := ac.adminUseCase.UpdateAdmin(id, name, email, password)

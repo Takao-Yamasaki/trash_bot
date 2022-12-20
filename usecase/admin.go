@@ -6,6 +6,7 @@ import (
 )
 
 type AdminUseCase interface {
+	GetAdminForAuth(email string) (result *admin.Admin, err error)
 	GetAdmin(id string) (result *admin.Admin, err error)
 	GetAdmins() (result []admin.Admin, err error)
 	CreateAdmin(name string, email string, password string) error
@@ -29,6 +30,15 @@ func (au *adminUseCase) GetAdmin(id string) (result *admin.Admin, err error) {
 		return nil, err
 	}
 	return admin, nil
+}
+
+func (au *adminUseCase) GetAdminForAuth(email string) (result *admin.Admin, err error) {
+	current_admin, err := au.adminRepository.GetAdminByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+
+	return  current_admin, nil
 }
 
 func (au *adminUseCase) GetAdmins() (result []admin.Admin, err error) {
